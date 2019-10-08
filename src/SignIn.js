@@ -11,6 +11,8 @@ import RFTextField from "./modules/form/RFTextField";
 import FormButton from "./modules/form/FormButton";
 import FormFeedback from "./modules/form/FormFeedback";
 
+import { login } from "./services/firebase";
+
 const useStyles = makeStyles(theme => ({
   form: {
     marginTop: theme.spacing(6)
@@ -41,8 +43,15 @@ function SignIn() {
     return errors;
   };
 
-  const handleSubmit = () => {
+  const onSubmit = async ({ email, password }) => {
     setSent(true);
+
+    try {
+      const user = await login(email, password);
+      sessionStorage.setItem("user", user.user.uid);
+    } catch (e) {
+      setSent(false);
+    }
   };
 
   return (
@@ -54,22 +63,24 @@ function SignIn() {
           </Typography>
           <Typography variant="body2" align="center">
             {"¿Todavia no tienes cuenta? "}
-            <Link
-              href="/signup/"
-              align="center"
-              underline="always"
-            >
+            <Link href="/signup/" align="center" underline="always">
               ¡Crea tu cuenta aquí!
             </Link>
           </Typography>
         </React.Fragment>
         <Form
-          onSubmit={handleSubmit}
-          subscription={{ submitting: true }}
+          onSubmit={() => {}}
+          // subscription={{ submitting: true }}
           validate={validate}
-        >
-          {({ handleSubmit2, submitting }) => (
-            <form onSubmit={handleSubmit2} className={classes.form} noValidate>
+          render={({ handleSubmit, submitting, values }) => (
+            <form
+              onSubmit={ev => {
+                ev.preventDefault();
+                onSubmit(values);
+              }}
+              className={classes.form}
+              noValidate
+            >
               <Field
                 autoComplete="email"
                 autoFocus
@@ -109,17 +120,15 @@ function SignIn() {
                 size="large"
                 color="secondary"
                 fullWidth
+                type="submit"
               >
                 {submitting || sent ? "Procesando…" : "Iniciar sesión"}
               </FormButton>
             </form>
           )}
-        </Form>
+        ></Form>
         <Typography align="center">
-          <Link
-            underline="always"
-            href="/frogotPassword/"
-          >
+          <Link underline="always" href="/forgotPassword/">
             ¿Olvidaste tu contraseña?
           </Link>
         </Typography>
