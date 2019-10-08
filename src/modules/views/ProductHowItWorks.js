@@ -63,16 +63,16 @@ function ProductHowItWorks(props) {
           alt="curvy lines"
         />
         <Typography variant="h4" marked="center" className={classes.title} component="h2">
-          How it works
+          ¿Quiénes somos?
         </Typography>
         <div>
           <Grid container spacing={5}>
             <Grid item xs={12} md={4}>
               <div className={classes.item}>
-                <div className={classes.number}>1.</div>
+                <div className={classes.number}>MISION</div>
                 <img
-                  src="/static/themes/onepirate/productHowItWorks1.svg"
-                  alt="suitcase"
+                  src="https://image.flaticon.com/icons/svg/149/149295.svg"
+                  alt="mision"
                   className={classes.image}
                 />
                 <Typography variant="h5" align="center">
@@ -82,10 +82,10 @@ function ProductHowItWorks(props) {
             </Grid>
             <Grid item xs={12} md={4}>
               <div className={classes.item}>
-                <div className={classes.number}>2.</div>
+                <div className={classes.number}>VISIÓN</div>
                 <img
-                  src="/static/themes/onepirate/productHowItWorks2.svg"
-                  alt="graph"
+                  src="https://image.flaticon.com/icons/svg/2103/2103705.svg"
+                  alt="visión"
                   className={classes.image}
                 />
                 <Typography variant="h5" align="center">
@@ -95,10 +95,10 @@ function ProductHowItWorks(props) {
             </Grid>
             <Grid item xs={12} md={4}>
               <div className={classes.item}>
-                <div className={classes.number}>3.</div>
+                <div className={classes.number}>META</div>
                 <img
-                  src="/static/themes/onepirate/productHowItWorks3.svg"
-                  alt="clock"
+                  src="https://image.flaticon.com/icons/svg/115/115778.svg"
+                  alt="meta"
                   className={classes.image}
                 />
                 <Typography variant="h5" align="center">
@@ -115,7 +115,7 @@ function ProductHowItWorks(props) {
           variant="contained"
           className={classes.button}
           component="a"
-          href="/premium-themes/onepirate/sign-up/"
+          href="/signup/"
         >
           Get started
         </Button>

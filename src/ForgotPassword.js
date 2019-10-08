@@ -89,7 +89,7 @@ function ForgotPassword() {
                 color="secondary"
                 fullWidth
               >
-                {submitting || sent ? 'Procesando…' : 'Enviar link de recuperación'}
+                {submitting || sent ? 'Procesando…' : 'Enviar'}
               </FormButton>
             </form>
           )}

@@ -8,7 +8,6 @@ import ProductValues from "./modules/views/ProductValues";
 import ProductHowItWorks from "./modules/views/ProductHowItWorks";
 import ProductCTA from "./modules/views/ProductCTA";
 import Album from "./modules/components/eventCard.js";
-
 function Index() {
   return (
     <div>

@@ -50,7 +50,7 @@ function AppAppBar(props) {
             className={classes.title}
             href="/"
           >
-            {"onepirate"}
+            {'¿Dónde está el vacile?'}
           </Link>
           <div className={classes.right}>
             <Link

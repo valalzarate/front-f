@@ -6,6 +6,8 @@ import Grid from "@material-ui/core/Grid";
 import Link from "@material-ui/core/Link";
 import { Field, Form, FormSpy } from "react-final-form";
 import Typography from "./modules/components/Typography";
+import AppFooter from "./modules/views/AppFooter";
+import AppAppBar from "./modules/views/AppAppBar";
 import AppForm from "./modules/views/AppForm";
 import { email, required } from "./modules/form/validation";
 import RFTextField from "./modules/form/RFTextField";
@@ -29,22 +31,6 @@ function SignUp() {
   const classes = useStyles();
   const [sent, setSent] = React.useState(false);
 
-  const validate = values => {
-    const errors = required(
-      ["firstName", "lastName", "email", "password"],
-      values
-    );
-
-    if (!errors.email) {
-      const emailError = email(values.email, values);
-      if (emailError) {
-        errors.email = email(values.email, values);
-      }
-    }
-
-    return errors;
-  };
-
   const handleSubmit = () => {
     setSent(true);
   };
@@ -54,19 +40,16 @@ function SignUp() {
       <AppForm>
         <React.Fragment>
           <Typography variant="h3" gutterBottom marked="center" align="center">
-            Crear cuenta
+            Contactanos
           </Typography>
           <Typography variant="body2" align="center">
             <Link href="/login/" underline="always">
-              ¿Ya tienes cuenta?
+              {'Cuentanos que piensas, si tienes alguna duda o sugerencia.'
+              + 'recuerda que siempre estamos atentos a tus mensajes.'},
             </Link>
           </Typography>
         </React.Fragment>
-        <Form
-          onSubmit={handleSubmit}
-          subscription={{ submitting: true }}
-          validate={validate}
-        >
+        <Form onSubmit={handleSubmit} subscription={{ submitting: true }}>
           {({ handleSubmit2, submitting }) => (
             <form onSubmit={handleSubmit2} className={classes.form} noValidate>
               <Grid container spacing={2}>
@@ -86,8 +69,8 @@ function SignUp() {
                     component={RFTextField}
                     autoComplete="lname"
                     fullWidth
-                    label="Apellido"
-                    name="lastName"
+                    label="Asunto"
+                    name="Subject"
                     required
                   />
                 </Grid>
@@ -107,11 +90,12 @@ function SignUp() {
                 component={RFTextField}
                 disabled={submitting || sent}
                 required
-                name="password"
-                autoComplete="current-password"
-                label="Contraseña"
-                type="password"
+                name="message"
+                label="Mensaje"
+                type="textarea"
                 margin="normal"
+                multiline={true}
+                rows={8}
               />
               <FormSpy subscription={{ submitError: true }}>
                 {({ submitError }) =>
@@ -128,7 +112,7 @@ function SignUp() {
                 color="secondary"
                 fullWidth
               >
-                {submitting || sent ? "Procesando…" : "Crear Cuenta"}
+                {submitting || sent ? "Procesando…" : "Enviar"}
               </FormButton>
             </form>
           )}

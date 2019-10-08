@@ -90,19 +90,19 @@ function ProductCategories(props) {
     {
       url:
         'https://images.unsplash.com/photo-1534081333815-ae5019106622?auto=format&fit=crop&w=400&q=80',
-      title: 'Snorkeling',
+      title: 'Playeros',
       width: '40%',
     },
     {
       url:
         'https://images.unsplash.com/photo-1531299204812-e6d44d9a185c?auto=format&fit=crop&w=400&q=80',
-      title: 'Massage',
+      title: 'Relajación',
       width: '20%',
     },
     {
       url:
         'https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?auto=format&fit=crop&w=400&q=80',
-      title: 'Hiking',
+      title: 'Aventureros',
       width: '40%',
     },
     {
@@ -114,7 +114,7 @@ function ProductCategories(props) {
     {
       url:
         'https://images.unsplash.com/photo-1523309996740-d5315f9cc28b?auto=format&fit=crop&w=400&q=80',
-      title: 'Gastronomy',
+      title: 'Gastronimicos',
       width: '38%',
     },
     {
@@ -126,7 +126,7 @@ function ProductCategories(props) {
     {
       url:
         'https://images.unsplash.com/photo-1506941433945-99a2aa4bd50a?auto=format&fit=crop&w=400&q=80',
-      title: 'Walking',
+      title: 'Caminatas',
       width: '40%',
     },
     {
@@ -138,7 +138,7 @@ function ProductCategories(props) {
     {
       url:
         'https://images.unsplash.com/photo-1518136247453-74e7b5265980?auto=format&fit=crop&w=400&q=80',
-      title: 'Reading',
+      title: 'Lectura',
       width: '40%',
     },
   ];
@@ -146,11 +146,11 @@ function ProductCategories(props) {
   return (
     <Container className={classes.root} component="section">
       <Typography variant="h4" marked="center" align="center" component="h2">
-        For all tastes and all desires
+      Para todos los gustos
       </Typography>
       <div className={classes.images}>
         {images.map(image => (
-          <ButtonBase
+          <ButtonBase href="/eventos/"
             key={image.title}
             className={classes.imageWrapper}
             style={{

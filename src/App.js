@@ -12,6 +12,9 @@ import AppAppBar from "./modules/views/AppAppBar";
 import AppFooter from "./modules/views/AppFooter";
 import ForgotPassword from "./ForgotPassword";
 import ProductHowItWorks from "./modules/views/ProductHowItWorks";
+import Contact from "./Contact";
+import Eventos from "./modules/views/Eventos";
+
 function App() {
   return (
     <Router>
@@ -20,9 +23,12 @@ function App() {
 
         <Route exact path="/" component={Home} />
         <Route exact path="/login" component={SignIn} />
-        <Route exact path="/signup" component={SignUp} />        
+        <Route exact path="/signup" component={SignUp} />
         <Route exact path="/frogotPassword" component={ForgotPassword} />
         <Route exact path="/how" component={ProductHowItWorks} />
+        <Route exact path="/contact" component={Contact} />
+        <Route exact path="/eventos" component={Eventos} />
+
 
         <AppFooter />
       </React.Fragment>
