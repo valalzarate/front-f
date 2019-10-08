@@ -1,25 +1,32 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import logo from "./logo.svg";
+import "./App.css";
 
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+
+import Home from "./Home";
+import SignIn from "./SignIn";
+import SignUp from "./SignUp";
+
+import AppAppBar from "./modules/views/AppAppBar";
+import AppFooter from "./modules/views/AppFooter";
+import ForgotPassword from "./ForgotPassword";
+import ProductHowItWorks from "./modules/views/ProductHowItWorks";
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <React.Fragment>
+        <AppAppBar />
+
+        <Route exact path="/" component={Home} />
+        <Route exact path="/login" component={SignIn} />
+        <Route exact path="/signup" component={SignUp} />        
+        <Route exact path="/frogotPassword" component={ForgotPassword} />
+        <Route exact path="/how" component={ProductHowItWorks} />
+
+        <AppFooter />
+      </React.Fragment>
+    </Router>
   );
 }
 
