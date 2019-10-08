@@ -6,6 +6,8 @@ import Link from "@material-ui/core/Link";
 import AppBar from "../components/AppBar";
 import Toolbar, { styles as toolbarStyles } from "../components/Toolbar";
 
+import { auth } from "../../services/firebase";
+
 const styles = theme => ({
   title: {
     fontSize: 24
@@ -35,9 +37,7 @@ const styles = theme => ({
   }
 });
 
-function AppAppBar(props) {
-  const { classes } = props;
-
+function AppAppBar({ classes, isAuth, setAuthentication }) {
   return (
     <div>
       <AppBar position="fixed">
@@ -53,23 +53,49 @@ function AppAppBar(props) {
             {"onepirate"}
           </Link>
           <div className={classes.right}>
-            <Link
-              color="inherit"
-              variant="h6"
-              underline="none"
-              className={classes.rightLink}
-              href="/login"
-            >
-              {"Iniciar Sesión"}
-            </Link>
-            <Link
-              variant="h6"
-              underline="none"
-              className={clsx(classes.rightLink, classes.linkSecondary)}
-              href="/signup/"
-            >
-              {"Crar Cuenta"}
-            </Link>
+            {isAuth ? (
+              <div>
+                <Link
+                  color="inherit"
+                  variant="h6"
+                  underline="none"
+                  className={classes.rightLink}
+                  href="#"
+                >
+                  {`¡Hola, ${auth.currentUser.displayName}!`}
+                </Link>
+                <Link
+                  color="inherit"
+                  variant="h6"
+                  underline="none"
+                  className={classes.rightLink}
+                  href="#"
+                  onClick={e => setAuthentication(false)}
+                >
+                  {`Salir`}
+                </Link>
+              </div>
+            ) : (
+              <div>
+                <Link
+                  color="inherit"
+                  variant="h6"
+                  underline="none"
+                  className={classes.rightLink}
+                  href="/login"
+                >
+                  {"Iniciar Sesión"}
+                </Link>
+                <Link
+                  variant="h6"
+                  underline="none"
+                  className={clsx(classes.rightLink, classes.linkSecondary)}
+                  href="/signup/"
+                >
+                  {"Crar Cuenta"}
+                </Link>
+              </div>
+            )}
           </div>
         </Toolbar>
       </AppBar>

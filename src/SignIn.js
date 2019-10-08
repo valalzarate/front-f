@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function SignIn() {
+function SignIn({ setAuthentication }) {
   const classes = useStyles();
   const [sent, setSent] = React.useState(false);
 
@@ -49,8 +49,9 @@ function SignIn() {
     try {
       const user = await login(email, password);
       sessionStorage.setItem("user", user.user.uid);
-      // TODO
+      setAuthentication(true);
     } catch (e) {
+      console.log(e);
       setSent(false);
     }
   };

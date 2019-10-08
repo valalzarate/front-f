@@ -29,7 +29,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function SignUp() {
+function SignUp({ setAuthentication }) {
   const classes = useStyles();
   const [sent, setSent] = React.useState(false);
 
@@ -55,7 +55,7 @@ function SignUp() {
     try {
       const user = await signup(email, password);
       sessionStorage.setItem("user", user.user.uid);
-      // TODO
+      setAuthentication(true);
     } catch (e) {
       setSent(false);
     }

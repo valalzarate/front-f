@@ -13,14 +13,20 @@ firebase.initializeApp({
   measurementId: "G-WHD8B2X2P7"
 });
 
-const auth = firebase.auth();
+export const auth = firebase.auth();
 
 export const login = (email, password) => {
   return auth.signInWithEmailAndPassword(email, password);
 };
 
-export const signup = (email, password) => {
-  return auth.createUserWithEmailAndPassword(email, password);
+export const signup = (email, password, firstName, lastName) => {
+  return auth
+    .createUserWithEmailAndPassword(email, password)
+    .then(({ user }) => {
+      return user.updateProfile({
+        displayName: `${firstName} ${lastName}`
+      });
+    });
 };
 
 export const signout = () => {
