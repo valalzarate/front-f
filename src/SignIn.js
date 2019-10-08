@@ -49,6 +49,7 @@ function SignIn() {
     try {
       const user = await login(email, password);
       sessionStorage.setItem("user", user.user.uid);
+      // TODO
     } catch (e) {
       setSent(false);
     }
@@ -72,7 +73,7 @@ function SignIn() {
           onSubmit={() => {}}
           // subscription={{ submitting: true }}
           validate={validate}
-          render={({ handleSubmit, submitting, values }) => (
+          render={({ submitting, values }) => (
             <form
               onSubmit={ev => {
                 ev.preventDefault();

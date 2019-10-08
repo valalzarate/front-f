@@ -21,7 +21,7 @@ function App() {
         <Route exact path="/" component={Home} />
         <Route exact path="/login" component={SignIn} />
         <Route exact path="/signup" component={SignUp} />        
-        <Route exact path="/frogotPassword" component={ForgotPassword} />
+        <Route exact path="/forgotPassword" component={ForgotPassword} />
         <Route exact path="/how" component={ProductHowItWorks} />
 
         <AppFooter />
