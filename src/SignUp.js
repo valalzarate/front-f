@@ -51,7 +51,7 @@ function SignUp({ setAuthentication }) {
     setSent(true);
 
     try {
-      const user = await signup(email, password);
+      const user = await signup(email, password, firstName, lastName);
       sessionStorage.setItem("user", user.user.uid);
       setAuthentication(true);
     } catch (e) {
