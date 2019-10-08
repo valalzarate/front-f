@@ -12,6 +12,8 @@ import RFTextField from "./modules/form/RFTextField";
 import FormButton from "./modules/form/FormButton";
 import FormFeedback from "./modules/form/FormFeedback";
 
+import { signup } from "./services/firebase";
+
 const useStyles = makeStyles(theme => ({
   form: {
     marginTop: theme.spacing(6)
@@ -25,7 +27,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function SignUp() {
+function SignUp({ setAuthentication }) {
   const classes = useStyles();
   const [sent, setSent] = React.useState(false);
 
@@ -45,8 +47,16 @@ function SignUp() {
     return errors;
   };
 
-  const handleSubmit = () => {
+  const onSubmit = async ({ firstName, lastName, email, password }) => {
     setSent(true);
+
+    try {
+      const user = await signup(email, password);
+      sessionStorage.setItem("user", user.user.uid);
+      setAuthentication(true);
+    } catch (e) {
+      setSent(false);
+    }
   };
 
   return (
@@ -63,12 +73,19 @@ function SignUp() {
           </Typography>
         </React.Fragment>
         <Form
-          onSubmit={handleSubmit}
-          subscription={{ submitting: true }}
+          onSubmit={() => {}}
+          // subscription={{ submitting: true }}
           validate={validate}
         >
-          {({ handleSubmit2, submitting }) => (
-            <form onSubmit={handleSubmit2} className={classes.form} noValidate>
+          {({ submitting, values }) => (
+            <form
+              onSubmit={ev => {
+                ev.preventDefault();
+                onSubmit(values);
+              }}
+              className={classes.form}
+              noValidate
+            >
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                   <Field
