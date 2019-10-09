@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import logo from "./logo.svg";
 import "./App.css";
 
 import { BrowserRouter as Router } from "react-router-dom";
@@ -8,10 +7,10 @@ import AppAppBar from "./modules/views/AppAppBar";
 import AppFooter from "./modules/views/AppFooter";
 import Routes from "./Router";
 
-import { signout } from "./services/firebase";
+import { signout, auth } from "./services/firebase";
 
 function App() {
-  const [isAuth, setIsAuth] = useState(false);
+  const [isAuth, setIsAuth] = useState(!!auth.currentUser);
 
   const setAuthentication = val => {
     if (!val) {
@@ -20,6 +19,14 @@ function App() {
     }
     setIsAuth(val);
   };
+
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      setIsAuth(true);
+    } else {
+      setIsAuth(false);
+    }
+  });
 
   return (
     <Router>
