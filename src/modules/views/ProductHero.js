@@ -7,7 +7,7 @@ import ProductHeroLayout from './ProductHeroLayout';
 import { relative } from 'path';
 
 const backgroundI =
-  'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80';
+  'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80';
 
  const styles = theme => ({
   background: {

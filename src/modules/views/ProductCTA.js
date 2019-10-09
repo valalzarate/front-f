@@ -79,7 +79,7 @@ function ProductCTA(props) {
           <div className={classes.card}>
             <form onSubmit={handleSubmit} className={classes.cardContent}>
               <Typography variant="h2" component="h2" gutterBottom>
-                Receive Noticicaciones
+                Recibe Noticicaciones
               </Typography>
               <Typography variant="h5">
                 Lo mejor esestar al tanto de todo lo que pasa en barranquilla.

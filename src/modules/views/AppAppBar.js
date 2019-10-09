@@ -92,7 +92,7 @@ function AppAppBar({ classes, isAuth, setAuthentication }) {
                   className={clsx(classes.rightLink, classes.linkSecondary)}
                   href="/signup/"
                 >
-                  {"Crar Cuenta"}
+                  {"Crear Cuenta"}
                 </Link>
               </div>
             )}
