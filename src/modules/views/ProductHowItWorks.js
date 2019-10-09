@@ -76,7 +76,7 @@ function ProductHowItWorks(props) {
                   className={classes.image}
                 />
                 <Typography variant="h5" align="center">
-                  Appointment every Wednesday 9am.
+                  info 1
                 </Typography>
               </div>
             </Grid>
@@ -89,7 +89,7 @@ function ProductHowItWorks(props) {
                   className={classes.image}
                 />
                 <Typography variant="h5" align="center">
-                  First come, first served. Our offers are in limited quantities, so be quick.
+                  info 2
                 </Typography>
               </div>
             </Grid>
@@ -102,8 +102,7 @@ function ProductHowItWorks(props) {
                   className={classes.image}
                 />
                 <Typography variant="h5" align="center">
-                  {'New offers every week. New experiences, new surprises. '}
-                  {'Your Sundays will no longer be alike.'}
+                  {'info 3'}
                 </Typography>
               </div>
             </Grid>
@@ -115,9 +114,9 @@ function ProductHowItWorks(props) {
           variant="contained"
           className={classes.button}
           component="a"
-          href="/signup/"
+          href="/eventos/"
         >
-          Get started
+          Ver Eventos
         </Button>
       </Container>
     </section>

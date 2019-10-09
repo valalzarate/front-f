@@ -65,7 +65,7 @@ export default function Album() {
             <div className={classes.heroButtons}>
               <Grid container spacing={2} justify="center">
                 <Grid item>
-                  <Button href = "/how" variant="contained" color="primary">
+                  <Button href = "/info" variant="contained" color="primary">
                     Más información
                   </Button>
                 </Grid>

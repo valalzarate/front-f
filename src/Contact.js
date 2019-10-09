@@ -43,10 +43,10 @@ function SignUp() {
             Contactanos
           </Typography>
           <Typography variant="body2" align="center">
-            <Link href="/login/" underline="always">
+            
               {'Cuentanos que piensas, si tienes alguna duda o sugerencia.'
               + 'recuerda que siempre estamos atentos a tus mensajes.'},
-            </Link>
+          
           </Typography>
         </React.Fragment>
         <Form onSubmit={handleSubmit} subscription={{ submitting: true }}>

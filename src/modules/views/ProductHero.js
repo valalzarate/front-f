@@ -48,9 +48,9 @@ function ProductHero(props) {
         size="large"
         className={classes.button}
         component="a"
-        href="/premium-themes/onepirate/sign-up/"
+        href="/signup/"
       >
-        Registrate
+        Comienza ya
       </Button>
       <Typography variant="body2" color="inherit" className={classes.more}>
         ¡Descubre todas las aventuras que barranquilla te ofrece!

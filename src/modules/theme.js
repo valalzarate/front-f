@@ -5,17 +5,17 @@ const rawTheme = createMuiTheme({
   palette: {
     primary: {
       light: '#69696a',
-      main: '#fb8c00',
-      dark: '#ffd600',
+      main: '#3f51b5',
+      dark: '#002984',
     },
     secondary: {
       light: '#fff5f8',
-      main: '#ffd600',
-      dark: '#f4366c',
+      main: '#f4366c',
+      dark: '#ff0671',
     },
     warning: {
-      main: '#ffc071',
-      dark: '#ffb25e',
+      main: '#639cff',
+      dark: '#4f7ccc',
     },
     error: {
       xLight: red[50],

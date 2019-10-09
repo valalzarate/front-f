@@ -11,8 +11,7 @@ import Album from "./modules/components/eventCard.js";
 function Index() {
   return (
     <div>
-      <ProductHero />
-      <ProductValues />     
+      <ProductHero />    
       <ProductCategories />
       <Album />
       <ProductCTA />

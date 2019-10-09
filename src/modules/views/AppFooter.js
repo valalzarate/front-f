@@ -33,27 +33,24 @@ export default function Footer(props) {
           <List className={classes.list}>
             <ListItem className={classes.inlineBlock}>
               <a
-                href="how"
+                href="/info"
                 className={classes.block}
-                target="_blank"
               >
                 Acera de nosotros
               </a>
             </ListItem>
             <ListItem className={classes.inlineBlock}>
               <a
-                href="https://www.creative-tim.com/presentation?ref=mkr-footer"
+                href="/terms"
                 className={classes.block}
-                target="_blank"
               >
                 Terminos y condiciones
               </a>
             </ListItem>
             <ListItem className={classes.inlineBlock}>
               <a
-                href="http://blog.creative-tim.com/?ref=mkr-footer"
+                href="/privacy"
                 className={classes.block}
-                target="_blank"
               >
                 Privacidad
               </a>
@@ -62,7 +59,6 @@ export default function Footer(props) {
               <a
                 href="/eventos/"
                 className={classes.block}
-                target="_blank"
               >
                 Eventos
               </a>

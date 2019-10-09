@@ -7,29 +7,22 @@ import ProductHowItWorks from "./modules/views/ProductHowItWorks";
 import Home from "./Home";
 import SignIn from "./SignIn";
 import SignUp from "./SignUp";
+import Terms from "./Terms";
+import Privacy from "./Privacy";
+import Eventos from "./modules/views/Eventos";
+import Contact from "./Contact";
 
 export default function Router(props) {
   const routes = [
-    {
-      path: "/",
-      component: Home
-    },
-    {
-      path: "/login",
-      component: SignIn
-    },
-    {
-      path: "/signup",
-      component: SignUp
-    },
-    {
-      path: "/forgotPassword",
-      component: ForgotPassword
-    },
-    {
-      path: "/how",
-      component: ProductHowItWorks
-    }
+    { path: "/", component: Home },
+    { path: "/login", component: SignIn },
+    { path: "/signup", component: SignUp },
+    { path: "/forgotPassword", component: ForgotPassword },
+    { path: "/info", component: ProductHowItWorks },
+    { path: "/terms", component: Terms },
+    { path: "/privacy", component: Privacy },
+    { path: "/eventos", component: Eventos },
+    { path: "/contact", component: Contact },
   ];
 
   return routes.map(route => (
