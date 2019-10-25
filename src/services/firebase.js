@@ -2,6 +2,7 @@ import firebase from "firebase/app";
 import "firebase/database";
 import "firebase/storage";
 import "firebase/auth";
+import "firebase/firestore"
 
 firebase.initializeApp({
   apiKey: "AIzaSyCyyqZlfpRRa8lZ4VmqbyhWM2jKPQ8fIOU",
@@ -14,6 +15,7 @@ firebase.initializeApp({
 });
 
 export const auth = firebase.auth();
+export const db = firebase.firestore();
 
 export const login = (email, password) => {
   return auth.signInWithEmailAndPassword(email, password);
