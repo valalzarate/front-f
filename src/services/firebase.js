@@ -2,6 +2,7 @@ import firebase from "firebase/app";
 import "firebase/database";
 import "firebase/storage";
 import "firebase/auth";
+import 'firebase/firestore';
 
 firebase.initializeApp({
   apiKey: "AIzaSyCyyqZlfpRRa8lZ4VmqbyhWM2jKPQ8fIOU",
@@ -14,9 +15,11 @@ firebase.initializeApp({
 });
 
 export const auth = firebase.auth();
+export const db = firebase.firestore();
+
 
 export const login = (email, password) => {
-  return auth.signInWithEmailAndPassword(email, password);
+  return auth.signInWithEmailAndPassword(email, password)
 };
 
 export const signup = (email, password, firstName, lastName) => {
@@ -25,9 +28,17 @@ export const signup = (email, password, firstName, lastName) => {
     .then(({ user }) => {
       return user.updateProfile({
         displayName: `${firstName} ${lastName}`
-      });
+      })
     });
 };
+
+export const adduser = (email, password, firstName, lastName) =>{
+  db.collection('usuarios').add({
+    nombre: fistName,
+    apellido:lastName,
+    correo: email,
+  });
+}
 
 export const signout = () => {
   return auth.signOut();
