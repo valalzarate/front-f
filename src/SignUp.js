@@ -11,7 +11,6 @@ import { email, required } from "./modules/form/validation";
 import RFTextField from "./modules/form/RFTextField";
 import FormButton from "./modules/form/FormButton";
 import FormFeedback from "./modules/form/FormFeedback";
-
 import { signup } from "./services/firebase";
 
 const useStyles = makeStyles(theme => ({
@@ -30,19 +29,44 @@ const useStyles = makeStyles(theme => ({
 function SignUp({ setAuthentication }) {
   const classes = useStyles();
   const [sent, setSent] = React.useState(false);
+  const firebase = require("firebase");
+    // Required for side-effects
+    require("firebase/firestore");
+    var db = firebase.firestore();
 
   const validate = values => {
     const errors = required(
       ["firstName", "lastName", "email", "password"],
       values
+      
     );
-
+    // Add a second document with a generated ID.
+  
     if (!errors.email) {
       const emailError = email(values.email, values);
       if (emailError) {
         errors.email = email(values.email, values);
       }
     }
+
+    db.collection("Usuarios").add({
+      first: "Alan",
+      middle: "Mathison",
+      email: "Turing",
+      password: 1912
+    })
+    .then(function(docRef) {
+      console.log("Document written with ID: ", docRef.id);
+    })
+    .catch(function(error) {
+      console.error("Error adding document: ", error);
+    });
+    db.collection("Usuarios").get().then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+          console.log(`${doc.id} => ${doc.data()}`);
+      });
+    });
+
 
     return errors;
   };
