@@ -14,19 +14,27 @@ firebase.initializeApp({
 });
 
 export const auth = firebase.auth();
+const db = firebase.firestore();
+
+
+let listaUsuarios = db.collection('Usuarios');
+
 
 export const login = (email, password) => {
   return auth.signInWithEmailAndPassword(email, password);
 };
 
 export const signup = (email, password, firstName, lastName) => {
-  return auth
-    .createUserWithEmailAndPassword(email, password)
-    .then(({ user }) => {
+  return auth.createUserWithEmailAndPassword(email, password).then(({ user }) => {
       return user.updateProfile({
         displayName: `${firstName} ${lastName}`
       });
-    });
+  });
+  let updateUsers= listaUsuarios.update({
+    Apellido: lastName,
+    Correo: email,
+    Nombre: firstName
+  });
 };
 
 export const signout = () => {
@@ -35,4 +43,8 @@ export const signout = () => {
 
 export const passwordRecovery = email => {
   return auth.sendPasswordResetEmail(email);
+};
+
+export const updateDocument = () => { 
+  return auth.updateUsers;
 };
