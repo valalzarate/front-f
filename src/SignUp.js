@@ -12,7 +12,7 @@ import RFTextField from "./modules/form/RFTextField";
 import FormButton from "./modules/form/FormButton";
 import FormFeedback from "./modules/form/FormFeedback";
 
-import { signup } from "./services/firebase";
+import { signup, adduser } from "./services/firebase";
 
 const useStyles = makeStyles(theme => ({
   form: {
@@ -52,7 +52,8 @@ function SignUp({ setAuthentication }) {
 
     try {
       const user = await signup(email, password, firstName, lastName);
-      sessionStorage.setItem("user", user.user.uid);
+      adduser(email, password, firstName, lastName)
+      sessionStorage.setItem("user", user.user.uid); 
       setAuthentication(true);
     } catch (e) {
       setSent(false);
@@ -152,6 +153,8 @@ function SignUp({ setAuthentication }) {
         </Form>
       </AppForm>
     </div>
+    
+  
   );
 }
 
