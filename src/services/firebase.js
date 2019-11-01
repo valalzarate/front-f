@@ -32,9 +32,9 @@ export const signup = (email, password, firstName, lastName) => {
     });
 };
 
-export const adduser = (email, password, firstName, lastName) =>{
-  db.collection('usuarios').add({
-    nombre: fistName,
+export const adduser = (email, firstName, lastName) =>{
+  db.collection('Usuarios').add({
+    nombre: firstName,
     apellido:lastName,
     correo: email,
   });

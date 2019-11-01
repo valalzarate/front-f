@@ -52,7 +52,7 @@ function SignUp({ setAuthentication }) {
 
     try {
       const user = await signup(email, password, firstName, lastName);
-      adduser(email, password, firstName, lastName)
+      adduser(email, firstName, lastName);
       sessionStorage.setItem("user", user.user.uid); 
       setAuthentication(true);
     } catch (e) {
