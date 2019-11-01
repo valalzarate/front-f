@@ -34,7 +34,7 @@ export const signup = (email, password, firstName, lastName) => {
 
 export const adduser = (email, password, firstName, lastName) =>{
   db.collection('usuarios').add({
-    nombre: fistName,
+    nombre: firstName,
     apellido:lastName,
     correo: email,
   });
