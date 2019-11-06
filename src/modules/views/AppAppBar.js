@@ -60,7 +60,7 @@ function AppAppBar({ classes, isAuth, setAuthentication }) {
                   variant="h6"
                   underline="none"
                   className={classes.rightLink}
-                  href="#"
+                  href="/perfil"
                 >
                   {`¡Hola, ${auth.currentUser.displayName}!`}
                 </Link>
