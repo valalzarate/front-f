@@ -11,6 +11,7 @@ import Terms from "./Terms";
 import Privacy from "./Privacy";
 import Eventos from "./modules/views/Eventos";
 import Contact from "./Contact";
+import Perfil from "./Perfil";
 
 export default function Router(props) {
   const routes = [
@@ -23,6 +24,7 @@ export default function Router(props) {
     { path: "/privacy", component: Privacy },
     { path: "/eventos", component: Eventos },
     { path: "/contact", component: Contact },
+    { path: "/perfil", component: Perfil },
   ];
 
   return routes.map(route => (
