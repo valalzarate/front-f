@@ -33,13 +33,16 @@ export const signup = (email, password, firstName, lastName) => {
     });
 };
 
-export const adduser = (email, firstName, lastName) => {
-    db.collection('usuarios').add({
-    nombre: firstName,
-    apellido:lastName,
-    correo: email,
+export const adduser = (firstName, lastName, email, typeUser, urlphoto, idusuario) => {
+    db.collection('Usuarios').doc(idusuario).set({
+    Nombre: firstName,
+    Apellido:lastName,
+    Email: email,
+    TipoUsuario: typeUser,
+    photoURL: urlphoto
   });
 };
+
 
 export const signout = () => {
   return auth.signOut();

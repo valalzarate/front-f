@@ -37,7 +37,7 @@ const styles = theme => ({
   }
 });
 
-function AppAppBar({ classes, isAuth, setAuthentication }) {
+function AppAppBar({ classes, isAuth, setAuthentication}) {
   return (
     <div>
       <AppBar position="fixed">

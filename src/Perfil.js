@@ -6,7 +6,6 @@ import FileUpload from "./modules/components/FileUpload"
 function Perfil({ setAuthentication }) {
   return (
     <div>
-      Montar Foto
       <FileUpload/>  
     </div>
     
