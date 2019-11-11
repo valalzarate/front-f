@@ -3,7 +3,6 @@ import withRoot from "./modules/withRoot";
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
-import Link from "@material-ui/core/Link";
 import { Field, Form, FormSpy } from "react-final-form";
 import Typography from "./modules/components/Typography";
 import FileUpload from "./modules/components/FileUpload";
@@ -13,7 +12,7 @@ import RFTextField from "./modules/form/RFTextField";
 import FormButton from "./modules/form/FormButton";
 import FormFeedback from "./modules/form/FormFeedback";
 
-import { signup, addpost } from "./services/firebase";
+import { addpost } from "./services/firebase";
 
 const useStyles = makeStyles(theme => ({
   form: {

@@ -1,5 +1,5 @@
 import withRoot from "./modules/withRoot";
-import React, {Components} from "react";
+import React from "react";
 import FileUpload from "./modules/components/FileUpload"
 
 

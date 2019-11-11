@@ -1,7 +1,5 @@
 import React, {Component} from 'react';
 import firebase from 'firebase';
-import AppForm from "../../modules/views/AppForm";
-import Typography from "../../modules/components/Typography";
 // import { updatePhoto } from "././services/firebase";
 //import { Component } from 'react';
 
