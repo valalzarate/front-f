@@ -11,7 +11,7 @@ import { email, required } from "./modules/form/validation";
 import RFTextField from "./modules/form/RFTextField";
 import FormButton from "./modules/form/FormButton";
 import FormFeedback from "./modules/form/FormFeedback";
-import { signup } from "./services/firebase";
+import { signup, adduser } from "./services/firebase";
 
 const useStyles = makeStyles(theme => ({
   form: {
