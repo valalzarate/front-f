@@ -16,15 +16,14 @@ class FileUpload extends Component{
        
     }
    
-    handleUpload(event)
-    {
+    handleUpload(event) {
       
       const user = firebase.auth().currentUser;
       const idUsuario = user.email;
       const db = firebase.firestore();
       const userActual =  db.collection("Usuarios").doc(idUsuario);
       const file = event.target.files[0];
-      const storageRef = firebase.storage().ref(`/usuarios/${idUsuario}/fotos/profilePhoto.jpg`);
+      const storageRef = firebase.storage().ref(this.props.route);
       const task = storageRef.put(file);
 
       task.on('state_changed' , snapshot =>{
@@ -35,15 +34,12 @@ class FileUpload extends Component{
       } , error =>{
         console.log(error.message);
       } , () =>{
-           storageRef.getDownloadURL().then(url => {
-                    this.setState({ picture: url });
-                    userActual.update({
-                      photoURL: url
-                    });
-                });
-
-               
-
+          storageRef.getDownloadURL().then(url => {
+            this.setState({ picture: url });
+            userActual.update({
+              photoURL: url
+            });
+        });
       });
     }
 

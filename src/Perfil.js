@@ -6,7 +6,7 @@ import FileUpload from "./modules/components/FileUpload"
 function Perfil({ setAuthentication }) {
   return (
     <div>
-      <FileUpload/>  
+      <FileUpload route={`/usuarios/${1+1}/fotos/profilePhoto.jpg"`}/>  
     </div>
     
   );
