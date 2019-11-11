@@ -6,12 +6,14 @@ import Grid from "@material-ui/core/Grid";
 import Link from "@material-ui/core/Link";
 import { Field, Form, FormSpy } from "react-final-form";
 import Typography from "./modules/components/Typography";
+import FileUpload from "./modules/components/FileUpload";
 import AppForm from "./modules/views/AppForm";
-import { email, required } from "./modules/form/validation";
+import { required } from "./modules/form/validation";
 import RFTextField from "./modules/form/RFTextField";
 import FormButton from "./modules/form/FormButton";
 import FormFeedback from "./modules/form/FormFeedback";
-import { signup } from "./services/firebase";
+
+import { signup, addpost } from "./services/firebase";
 
 const useStyles = makeStyles(theme => ({
   form: {
@@ -29,56 +31,26 @@ const useStyles = makeStyles(theme => ({
 function SignUp({ setAuthentication }) {
   const classes = useStyles();
   const [sent, setSent] = React.useState(false);
-  const firebase = require("firebase");
-    // Required for side-effects
-    require("firebase/firestore");
-    var db = firebase.firestore();
 
   const validate = values => {
     const errors = required(
-      ["firstName", "lastName", "email", "password"],
+      ["titulo", "autor", "lugar", "descripcion", "fecha"],
       values
-      
     );
-    // Add a second document with a generated ID.
-  
-    if (!errors.email) {
-      const emailError = email(values.email, values);
-      if (emailError) {
-        errors.email = email(values.email, values);
-      }
-    }
-
-    db.collection("Usuarios").add({
-      first: "Alan",
-      middle: "Mathison",
-      email: "Turing",
-      password: 1912
-    })
-    .then(function(docRef) {
-      console.log("Document written with ID: ", docRef.id);
-    })
-    .catch(function(error) {
-      console.error("Error adding document: ", error);
-    });
-    db.collection("Usuarios").get().then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-          console.log(`${doc.id} => ${doc.data()}`);
-      });
-    });
-
 
     return errors;
   };
 
-  const onSubmit = async ({ firstName, lastName, email, password }) => {
+  const onSubmit = async ({ titulo, autor, lugar, descripcion, fecha}) => {
     setSent(true);
 
     try {
-      const user = await signup(email, password, firstName, lastName);
-      adduser(firstName, lastName, email, 0, "0", email);
-      sessionStorage.setItem("user", user.user.uid); 
-      setAuthentication(true);
+      
+     console.log("titulo: "+titulo);
+      addpost(titulo, autor,lugar,descripcion,fecha,"aun no hay", "hisaaca20@gmail.com");
+      
+
+      
     } catch (e) {
       setSent(false);
     }
@@ -89,12 +61,9 @@ function SignUp({ setAuthentication }) {
       <AppForm>
         <React.Fragment>
           <Typography variant="h3" gutterBottom marked="center" align="center">
-            Crear cuenta
+            Crear Evento
           </Typography>
           <Typography variant="body2" align="center">
-            <Link href="/login/" underline="always">
-              ¿Ya tienes cuenta?
-            </Link>
           </Typography>
         </React.Fragment>
         <Form
@@ -118,8 +87,8 @@ function SignUp({ setAuthentication }) {
                     component={RFTextField}
                     autoComplete="fname"
                     fullWidth
-                    label="Nombre"
-                    name="firstName"
+                    label="Titulo"
+                    name="titulo"
                     required
                   />
                 </Grid>
@@ -128,20 +97,36 @@ function SignUp({ setAuthentication }) {
                     component={RFTextField}
                     autoComplete="lname"
                     fullWidth
-                    label="Apellido"
-                    name="lastName"
+                    label="Autor"
+                    name="autor"
                     required
                   />
                 </Grid>
               </Grid>
+
               <Field
-                autoComplete="email"
+                fullWidth
+                component={RFTextField}
+                disabled={submitting || sent}
+                required
+                name="lugar"
+                autoComplete="current-lugar"
+                label="Lugar"
+                type="lugar"
+                margin="normal"
+              />
+
+              <Field
+                autoComplete="descripcion"
                 component={RFTextField}
                 disabled={submitting || sent}
                 fullWidth
-                label="Correo"
+                label="Descripcion"
+                type="textarea"
                 margin="normal"
-                name="email"
+                name="descripcion"
+                multiline={true}
+                rows={8}
                 required
               />
               <Field
@@ -149,12 +134,15 @@ function SignUp({ setAuthentication }) {
                 component={RFTextField}
                 disabled={submitting || sent}
                 required
-                name="password"
-                autoComplete="current-password"
-                label="Contraseña"
-                type="password"
+                name="fecha"
+                autoComplete="current-fecha"
+                label="Fecha"
+                type="fecha"
                 margin="normal"
               />
+
+              <FileUpload/>
+
               <FormSpy subscription={{ submitError: true }}>
                 {({ submitError }) =>
                   submitError ? (
@@ -164,13 +152,14 @@ function SignUp({ setAuthentication }) {
                   ) : null
                 }
               </FormSpy>
+              
               <FormButton
                 className={classes.button}
                 disabled={submitting || sent}
                 color="secondary"
                 fullWidth
               >
-                {submitting || sent ? "Procesando…" : "Crear Cuenta"}
+                {submitting || sent ? "Procesando…" : "Crear"}
               </FormButton>
             </form>
           )}

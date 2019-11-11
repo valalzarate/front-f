@@ -31,7 +31,10 @@ function App() {
   return (
     <Router>
       <React.Fragment>
-        <AppAppBar isAuth={isAuth} setAuthentication={setAuthentication} />
+        <AppAppBar 
+        isAuth={isAuth} 
+        setAuthentication={setAuthentication} 
+        />
         {<Routes isAuth={isAuth} setAuthentication={setAuthentication} />}
         <AppFooter />
       </React.Fragment>

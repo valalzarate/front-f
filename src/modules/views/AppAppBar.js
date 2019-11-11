@@ -37,7 +37,7 @@ const styles = theme => ({
   }
 });
 
-function AppAppBar({ classes, isAuth, setAuthentication }) {
+function AppAppBar({ classes, isAuth, setAuthentication}) {
   return (
     <div>
       <AppBar position="fixed">
@@ -60,7 +60,7 @@ function AppAppBar({ classes, isAuth, setAuthentication }) {
                   variant="h6"
                   underline="none"
                   className={classes.rightLink}
-                  href="#"
+                  href="/perfil"
                 >
                   {`¡Hola, ${auth.currentUser.displayName}!`}
                 </Link>
