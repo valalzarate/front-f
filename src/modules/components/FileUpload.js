@@ -52,17 +52,10 @@ class FileUpload extends Component{
     render(){
         return(
             <div>
-               <AppForm>
-                
-               <Typography variant="h4" gutterBottom marked="center" align="center">
-                Perfil
-               </Typography>
-                <progress value ={this.state.UploadValue} max="100"> </progress>
-                <br/>
+           
                 <input type ="file" onChange={this.handleUpload}/>
                 <br/>
-                <img with="100" src={this.state.picture} alt ="100"/>
-                </AppForm>
+              
             </div>
         )
     }

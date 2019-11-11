@@ -15,6 +15,8 @@
     "react-final-form": "^6.3.0",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.2.0",
+    "react-standalone-form": "^0.6.10",
+    "react-widgets": "^4.4.11",
     "theme-provider": "^1.0.8",
     "validator": "^11.1.0"
   },

@@ -44,6 +44,18 @@ export const adduser = (firstName, lastName, email, typeUser, urlphoto, idusuari
 };
 
 
+export const addpost = (titulo, autor, lugar, descripcion, fecha, imgLink, idUsuario) => {
+  db.collection('Eventos').doc(titulo).set({
+  Titulo: titulo,
+  Autores: autor,
+  Lugar: lugar,
+  Descripcion: descripcion,
+  Fecha: fecha,
+  photoEvent: imgLink
+});
+};
+
+
 export const signout = () => {
   return auth.signOut();
 };
