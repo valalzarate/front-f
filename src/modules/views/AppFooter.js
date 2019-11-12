@@ -75,7 +75,7 @@ export default function Footer(props) {
           >
             Vacile quillero
           </a>{" "}
-          para que conozcas más a barranquilla
+          para que conozcas más a Barranquilla
         </div>
       </div>
     </footer>

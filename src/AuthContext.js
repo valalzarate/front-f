@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 
-import { signout, auth } from "./services/firebase";
+import { signout, auth, db } from "./services/firebase";
 
 const AuthContext = React.createContext();
 const Consumer = AuthContext.Consumer;
 const Provider = (props) => {
   const [isAuth, setIsAuth] = useState(!!auth.currentUser);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(auth.currentUser);
+  const [userDB, userDBLoaded] = React.useState(null);
   const setAuthentication = val => {
     if (!val) {
       signout();
@@ -15,23 +16,31 @@ const Provider = (props) => {
     setIsAuth(val);
   };
 
+  const getUserDB = async (email) => {
+    const user = await db.collection('Usuarios').doc(email).get();
+    userDBLoaded(user);
+  }
+
   useEffect(() => {
     auth.onAuthStateChanged(currentUser => {
-      if (user) {
+      if (currentUser) {
         setIsAuth(true);
         setUser(currentUser);
+        getUserDB(currentUser.email)
       } else {
         setIsAuth(false);
         setUser(currentUser);
       }
     });
-  }, [setIsAuth, user]);
+  });
 
   return (
     <AuthContext.Provider
       value={{
         isAuth: isAuth,
-        setAuthentication: setAuthentication
+        setAuthentication: setAuthentication,
+        user: user,
+        userDB: userDB
       }}>
       {props.children}
     </AuthContext.Provider>
