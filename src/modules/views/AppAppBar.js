@@ -37,7 +37,7 @@ const styles = theme => ({
   }
 });
 
-function AppAppBar({ classes, isAuth, setAuthentication }) {
+function AppAppBar({ classes, isAuth, setAuthentication, user }) {
   return (
     <div>
       <AppBar position="fixed">
@@ -50,7 +50,7 @@ function AppAppBar({ classes, isAuth, setAuthentication }) {
             className={classes.title}
             href="/"
           >
-            {'¿Dónde está el vacile?'}
+            {"¿Dónde está el vacile?"}
           </Link>
           <div className={classes.right}>
             {isAuth ? (
@@ -60,9 +60,9 @@ function AppAppBar({ classes, isAuth, setAuthentication }) {
                   variant="h6"
                   underline="none"
                   className={classes.rightLink}
-                  href="#"
+                  href="/perfil"
                 >
-                  {`¡Hola, ${auth.currentUser.displayName}!`}
+                  {`¡Hola, ${user && user.displayName}!`}
                 </Link>
                 <Link
                   color="inherit"

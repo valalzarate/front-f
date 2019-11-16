@@ -20,3 +20,13 @@
 .App-link {
   color: #09d3ac;
 }
+.MuiAvatar-root, MuiAvatar-colorDefault {
+  width: 100px !important;
+  height: 100px !important;
+  margin-bottom: 20px;
+}
+
+
+#upload-button {
+  margin-bottom: 30px;
+}

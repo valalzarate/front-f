@@ -11,8 +11,8 @@ import { email, required } from "./modules/form/validation";
 import RFTextField from "./modules/form/RFTextField";
 import FormButton from "./modules/form/FormButton";
 import FormFeedback from "./modules/form/FormFeedback";
-
 import { signup, adduser } from "./services/firebase";
+import { Redirect } from 'react-router-dom'
 
 const useStyles = makeStyles(theme => ({
   form: {
@@ -27,15 +27,20 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function SignUp({ setAuthentication }) {
+function SignUp({ setAuthentication, isAuth }) {
   const classes = useStyles();
   const [sent, setSent] = React.useState(false);
+  const firebase = require("firebase");
+  // Required for side-effects
+  require("firebase/firestore");
+  var db = firebase.firestore();
 
   const validate = values => {
     const errors = required(
       ["firstName", "lastName", "email", "password"],
       values
     );
+    // Add a second document with a generated ID.
 
     if (!errors.email) {
       const emailError = email(values.email, values);
@@ -43,6 +48,14 @@ function SignUp({ setAuthentication }) {
         errors.email = email(values.email, values);
       }
     }
+
+    db.collection("Usuarios")
+      .get()
+      .then(querySnapshot => {
+        querySnapshot.forEach(doc => {
+          console.log(`${doc.id} => ${doc.data()}`);
+        });
+      });
 
     return errors;
   };
@@ -52,8 +65,8 @@ function SignUp({ setAuthentication }) {
 
     try {
       const user = await signup(email, password, firstName, lastName);
-      adduser(email, password, firstName, lastName)
-      sessionStorage.setItem("user", user.user.uid); 
+      adduser(firstName, lastName, email, 0, "0", email);
+      sessionStorage.setItem("user", user.user.uid);
       setAuthentication(true);
     } catch (e) {
       setSent(false);
@@ -62,6 +75,8 @@ function SignUp({ setAuthentication }) {
 
   return (
     <div>
+      {isAuth ? <Redirect to="/" /> : <div />}
+
       <AppForm>
         <React.Fragment>
           <Typography variant="h3" gutterBottom marked="center" align="center">
@@ -153,8 +168,6 @@ function SignUp({ setAuthentication }) {
         </Form>
       </AppForm>
     </div>
-    
-  
   );
 }
 

@@ -4,11 +4,16 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import { Field, Form, FormSpy } from "react-final-form";
-import Typography from "./modules/components/Typography";
 import AppForm from "./modules/views/AppForm";
+import Typography from "./modules/components/Typography";
+import FileUpload from "./modules/components/FileUpload";
+import { required } from "./modules/form/validation";
 import RFTextField from "./modules/form/RFTextField";
 import FormButton from "./modules/form/FormButton";
 import FormFeedback from "./modules/form/FormFeedback";
+import { Redirect } from "react-router-dom";
+
+import { addpost } from "./services/firebase";
 
 const useStyles = makeStyles(theme => ({
   form: {
@@ -23,31 +28,63 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function SignUp() {
+function SignUp({ setAuthentication, isAuth }) {
   const classes = useStyles();
   const [sent, setSent] = React.useState(false);
 
-  const handleSubmit = () => {
+  const validate = values => {
+    const errors = required(
+      ["titulo", "autor", "lugar", "descripcion", "fecha"],
+      values
+    );
+
+    return errors;
+  };
+
+  const onSubmit = async ({ titulo, autor, lugar, descripcion, fecha }) => {
     setSent(true);
+
+    try {
+      console.log("titulo: " + titulo);
+      addpost(
+        titulo,
+        autor,
+        lugar,
+        descripcion,
+        fecha,
+        "aun no hay",
+        "hisaaca20@gmail.com"
+      );
+    } catch (e) {
+      setSent(false);
+    }
   };
 
   return (
     <div>
+      {isAuth ? <div /> : <Redirect to="/login" />}
+
       <AppForm>
         <React.Fragment>
           <Typography variant="h3" gutterBottom marked="center" align="center">
-            Contactanos
+            Crear Evento
           </Typography>
-          <Typography variant="body2" align="center">
-            
-              {'Cuentanos que piensas, si tienes alguna duda o sugerencia.'
-              + 'recuerda que siempre estamos atentos a tus mensajes.'},
-          
-          </Typography>
+          <Typography variant="body2" align="center"></Typography>
         </React.Fragment>
-        <Form onSubmit={handleSubmit} subscription={{ submitting: true }}>
-          {({ handleSubmit2, submitting }) => (
-            <form onSubmit={handleSubmit2} className={classes.form} noValidate>
+        <Form
+          onSubmit={() => {}}
+          // subscription={{ submitting: true }}
+          validate={validate}
+        >
+          {({ submitting, values }) => (
+            <form
+              onSubmit={ev => {
+                ev.preventDefault();
+                onSubmit(values);
+              }}
+              className={classes.form}
+              noValidate
+            >
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                   <Field
@@ -55,8 +92,8 @@ function SignUp() {
                     component={RFTextField}
                     autoComplete="fname"
                     fullWidth
-                    label="Nombre"
-                    name="firstName"
+                    label="Titulo"
+                    name="titulo"
                     required
                   />
                 </Grid>
@@ -65,34 +102,52 @@ function SignUp() {
                     component={RFTextField}
                     autoComplete="lname"
                     fullWidth
-                    label="Asunto"
-                    name="Subject"
+                    label="Autor"
+                    name="autor"
                     required
                   />
                 </Grid>
               </Grid>
+
               <Field
-                autoComplete="email"
+                fullWidth
                 component={RFTextField}
                 disabled={submitting || sent}
-                fullWidth
-                label="Correo"
+                required
+                name="lugar"
+                autoComplete="current-lugar"
+                label="Lugar"
+                type="lugar"
                 margin="normal"
-                name="email"
-                required
               />
+
               <Field
-                fullWidth
+                autoComplete="descripcion"
                 component={RFTextField}
                 disabled={submitting || sent}
-                required
-                name="message"
-                label="Mensaje"
+                fullWidth
+                label="Descripcion"
                 type="textarea"
                 margin="normal"
+                name="descripcion"
                 multiline={true}
                 rows={8}
+                required
               />
+              <Field
+                fullWidth
+                component={RFTextField}
+                disabled={submitting || sent}
+                required
+                name="fecha"
+                autoComplete="current-fecha"
+                label="Fecha"
+                type="fecha"
+                margin="normal"
+              />
+
+              <FileUpload />
+
               <FormSpy subscription={{ submitError: true }}>
                 {({ submitError }) =>
                   submitError ? (
@@ -102,13 +157,14 @@ function SignUp() {
                   ) : null
                 }
               </FormSpy>
+
               <FormButton
                 className={classes.button}
                 disabled={submitting || sent}
                 color="secondary"
                 fullWidth
               >
-                {submitting || sent ? "Procesando…" : "Enviar"}
+                {submitting || sent ? "Procesando…" : "Crear"}
               </FormButton>
             </form>
           )}
