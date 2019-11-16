@@ -114,7 +114,7 @@ function ProductCategories(props) {
     {
       url:
         'https://images.unsplash.com/photo-1523309996740-d5315f9cc28b?auto=format&fit=crop&w=400&q=80',
-      title: 'Gastronimicos',
+      title: 'Gastronómicos',
       width: '38%',
     },
     {

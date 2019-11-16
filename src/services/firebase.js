@@ -55,6 +55,32 @@ export const addpost = (titulo, autor, lugar, descripcion, fecha, imgLink, idUsu
   });
 };
 
+export const mostrarInfo = () => {
+  var user = auth.currentUser;
+
+  try {
+    console.log("el uid es: "+user.uid);
+    let cityRef = db.collection('Usuarios').doc(user.email);
+  let getDoc = cityRef.get()
+    .then(doc => {
+      if (!doc.exists) {
+        console.log('No such document!');
+      } else {
+        console.log('Document data:', doc.data());
+      }
+    })
+    .catch(err => {
+      console.log('Error getting document', err);
+    });
+  } catch (error) {
+    console.log(error);
+  }
+  
+  // [END get_document]
+
+};
+
+
 
 export const signout = () => {
   return auth.signOut();

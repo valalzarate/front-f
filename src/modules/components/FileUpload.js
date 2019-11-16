@@ -25,6 +25,7 @@ class FileUpload extends Component{
       const file = event.target.files[0];
       const storageRef = firebase.storage().ref(this.props.route);
       const task = storageRef.put(file);
+      console.log("estoy enfileupload, mi nombre: "+firebase.auth().currentUser.displayName);
 
       task.on('state_changed' , snapshot =>{
         let percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;

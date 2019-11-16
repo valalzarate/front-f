@@ -14,6 +14,9 @@ const styles = theme => ({
   },
   placeholder: toolbarStyles(theme).root,
   toolbar: {
+    background: '#c31432', 
+    background: "-webkit-linear-gradient(to left, #673AB7, #c31432)", 
+    background: "linear-gradient(to left, #673AB7, #c31432)", 
     justifyContent: "space-between"
   },
   left: {
@@ -33,8 +36,9 @@ const styles = theme => ({
     marginLeft: theme.spacing(3)
   },
   linkSecondary: {
-    color: theme.palette.secondary.main
+    color: '#FFB300'
   }
+  
 });
 
 function AppAppBar({ classes, isAuth, setAuthentication}) {
@@ -50,7 +54,7 @@ function AppAppBar({ classes, isAuth, setAuthentication}) {
             className={classes.title}
             href="/"
           >
-            {'¿Dónde está el vacile?'}
+            {'El Vacile'}
           </Link>
           <div className={classes.right}>
             {isAuth ? (
