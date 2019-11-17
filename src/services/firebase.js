@@ -12,7 +12,7 @@ firebase.initializeApp({
   storageBucket: "dondeestaelvacile.appspot.com",
   messagingSenderId: "101954469429",
   appId: "1:101954469429:web:d5987879591af1892efb7c",
-  measurementId: "G-WHD8B2X2P7",
+  measurementId: "G-WHD8B2X2P7"
 });
 
 export const auth = firebase.auth();
@@ -28,59 +28,65 @@ export const signup = (email, password, firstName, lastName) => {
     .then(({ user }) => {
       return user.updateProfile({
         displayName: `${firstName} ${lastName}`
-        
       });
     });
 };
 
-export const adduser = (firstName, lastName, email, typeUser, urlphoto, idusuario) => {
-    db.collection('Usuarios').doc(idusuario).set({
-    Nombre: firstName,
-    Apellido:lastName,
-    Email: email,
-    TipoUsuario: typeUser,
-    photoURL: urlphoto
-  });
-};
-
-
-export const addpost = (titulo, autor, lugar, descripcion, fecha, imgLink, idUsuario) => {
-  db.collection('Eventos').doc(titulo).set({
-    Titulo: titulo,
-    Autores: autor,
-    Lugar: lugar,
-    Descripcion: descripcion,
-    Fecha: fecha,
-    photoEvent: imgLink
-  });
-};
-
-export const mostrarInfo = () => {
-  var user = auth.currentUser;
-
+export const readUser = async (email) => {
   try {
-    console.log("el uid es: "+user.uid);
-    let cityRef = db.collection('Usuarios').doc(user.email);
-  let getDoc = cityRef.get()
-    .then(doc => {
-      if (!doc.exists) {
-        console.log('No such document!');
-      } else {
-        console.log('Document data:', doc.data());
-      }
-    })
-    .catch(err => {
-      console.log('Error getting document', err);
+    const data = await db.collection("Usuarios").where('Email', '==', email)
+      .get();
+    let user = [];
+    data.forEach((doc) => {
+      console.log(doc);
+      user.push(doc.data());
     });
-  } catch (error) {
-    console.log(error);
+    return user;
   }
-  
-  // [END get_document]
-
+  catch (err) {
+    return console.log(err);
+  }
 };
 
+export const adduser = (
+  firstName,
+  lastName,
+  email,
+  typeUser,
+  urlphoto,
+  idusuario
+) => {
+  db.collection("Usuarios")
+    .doc(idusuario)
+    .set({
+      Nombre: firstName,
+      Apellido: lastName,
+      Email: email,
+      TipoUsuario: typeUser,
+      photoURL: urlphoto
+    });
+};
 
+export const addpost = (
+  titulo,
+  autor,
+  lugar,
+  descripcion,
+  fecha,
+  imgLink,
+  idUsuario
+) => {
+  db.collection("Eventos")
+    .doc(titulo)
+    .set({
+      Titulo: titulo,
+      Autores: autor,
+      Lugar: lugar,
+      Descripcion: descripcion,
+      Fecha: fecha,
+      photoEvent: imgLink
+    });
+};
 
 export const signout = () => {
   return auth.signOut();

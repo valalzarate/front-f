@@ -4,13 +4,14 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import { Field, Form, FormSpy } from "react-final-form";
+import AppForm from "./modules/views/AppForm";
 import Typography from "./modules/components/Typography";
 import FileUpload from "./modules/components/FileUpload";
-import AppForm from "./modules/views/AppForm";
 import { required } from "./modules/form/validation";
 import RFTextField from "./modules/form/RFTextField";
 import FormButton from "./modules/form/FormButton";
 import FormFeedback from "./modules/form/FormFeedback";
+import { Redirect } from "react-router-dom";
 
 import { addpost } from "./services/firebase";
 
@@ -27,7 +28,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function SignUp({ setAuthentication }) {
+function SignUp({ setAuthentication, isAuth }) {
   const classes = useStyles();
   const [sent, setSent] = React.useState(false);
 
@@ -40,16 +41,20 @@ function SignUp({ setAuthentication }) {
     return errors;
   };
 
-  const onSubmit = async ({ titulo, autor, lugar, descripcion, fecha}) => {
+  const onSubmit = async ({ titulo, autor, lugar, descripcion, fecha }) => {
     setSent(true);
 
     try {
-      
-     console.log("titulo: "+titulo);
-      addpost(titulo, autor,lugar,descripcion,fecha,"aun no hay", "hisaaca20@gmail.com");
-      
-
-      
+      console.log("titulo: " + titulo);
+      addpost(
+        titulo,
+        autor,
+        lugar,
+        descripcion,
+        fecha,
+        "aun no hay",
+        "hisaaca20@gmail.com"
+      );
     } catch (e) {
       setSent(false);
     }
@@ -57,13 +62,14 @@ function SignUp({ setAuthentication }) {
 
   return (
     <div>
+      {isAuth ? <div /> : <Redirect to="/login" />}
+
       <AppForm>
         <React.Fragment>
           <Typography variant="h3" gutterBottom marked="center" align="center">
             Crear Evento
           </Typography>
-          <Typography variant="body2" align="center">
-          </Typography>
+          <Typography variant="body2" align="center"></Typography>
         </React.Fragment>
         <Form
           onSubmit={() => {}}
@@ -140,7 +146,7 @@ function SignUp({ setAuthentication }) {
                 margin="normal"
               />
 
-              <FileUpload/>
+              <FileUpload />
 
               <FormSpy subscription={{ submitError: true }}>
                 {({ submitError }) =>
@@ -151,7 +157,7 @@ function SignUp({ setAuthentication }) {
                   ) : null
                 }
               </FormSpy>
-              
+
               <FormButton
                 className={classes.button}
                 disabled={submitting || sent}
@@ -165,8 +171,6 @@ function SignUp({ setAuthentication }) {
         </Form>
       </AppForm>
     </div>
-    
-  
   );
 }
 

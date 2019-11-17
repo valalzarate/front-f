@@ -10,6 +10,7 @@ import { email, required } from "./modules/form/validation";
 import RFTextField from "./modules/form/RFTextField";
 import FormButton from "./modules/form/FormButton";
 import FormFeedback from "./modules/form/FormFeedback";
+import { Redirect } from "react-router-dom";
 
 import { login } from "./services/firebase";
 
@@ -26,7 +27,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function SignIn({ setAuthentication }) {
+function SignIn({ setAuthentication, isAuth }) {
   const classes = useStyles();
   const [sent, setSent] = React.useState(false);
 
@@ -58,6 +59,8 @@ function SignIn({ setAuthentication }) {
 
   return (
     <div>
+      {isAuth ? <Redirect to={"/perfil"}></Redirect> : <div></div>}
+
       <AppForm>
         <React.Fragment>
           <Typography variant="h3" gutterBottom marked="center" align="center">

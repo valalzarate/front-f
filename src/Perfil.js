@@ -1,9 +1,9 @@
 import withRoot from "./modules/withRoot";
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Avatar from '@material-ui/core/Avatar';
+import Avatar from "@material-ui/core/Avatar";
 import { Consumer } from "./AuthContext";
-
+import Button from "@material-ui/core/Button";
 import { Field, Form, FormSpy } from "react-final-form";
 import Typography from "./modules/components/Typography";
 import AppForm from "./modules/views/AppForm";
@@ -11,18 +11,18 @@ import RFTextField from "./modules/form/RFTextField";
 import FormButton from "./modules/form/FormButton";
 import FormFeedback from "./modules/form/FormFeedback";
 import Grid from "@material-ui/core/Grid";
+import firebase from "firebase";
+import { Redirect } from "react-router-dom";
 
-import { mostrarInfo } from "./services/firebase";
+export const auth = firebase.auth();
+export const db = firebase.firestore();
 
-var auth;
-var db;
-var currentUser;
 var nombrePersona;
-var apellidoPersona;
-var correoPersona;
+var    apellidoPersona;
+var    correoPersona;
 
 const useStyles = makeStyles(theme => ({
-  imgFluid: {
+  igFluid: {
     maxWidth: "100%",
     height: "auto"
   },
@@ -31,142 +31,203 @@ const useStyles = makeStyles(theme => ({
   },
   imgRoundedCircle: {
     borderRadius: "50% !important"
+  },
+  headAvatar: {
+    width: "100 px",
+    height: "100 px"
   }
 }));
 
-function Perfil() {
-
+function Perfil({ user, isAuth, userDB }) {
   const classes = useStyles();
+  require("firebase/firestore");
 
+ const db = firebase.firestore();
   const [sent, setSent] = React.useState(false);
 
-  const handleSubmit = () => {
+  const handleSubmit = async ({ firstName, apellido }) => {
     setSent(true);
-  };
-
-  const firebase = require("firebase");
-    // Required for side-effects
-     require("firebase/firestore");
-     require("firebase/auth");
-    auth = firebase.auth();
-    db = firebase.firestore();
-    currentUser = auth.currentUser;
-  // Create a query against the collection
-
 
     try {
-      let docRef = db.collection('Usuarios').doc(currentUser.email);
-      let getDoc = docRef.get().then(doc => {
-      nombrePersona = doc.get("Nombre");
-      apellidoPersona = doc.get("Apellido");
-      correoPersona = doc.get("Email");
-    })
-    } catch (error) {}
+      const user = auth.currentUser;
+      const userActual = db.collection("Usuarios").doc(user.email);
+      user.updateProfile({ displayName: firstName +" "+ apellido});
+      userActual.update({Nombre: firstName,Apellido: apellido});
+    } catch (error) {
+      setSent(false);
+    }
+    
+    
+  };
 
+  try {
+    let docRef = db.collection('Usuarios').doc(user.email).get().then(doc => {
+    nombrePersona = doc.get("Nombre");
+    apellidoPersona = doc.get("Apellido");
+    correoPersona = doc.get("Email");
+    console.log("ekl correoSd: "+correoPersona);
+  })
+  } catch (error) {}
+  
 
+  function uploadImage(event) {
+    const user = auth.currentUser;
+    const file = event.target.files[0];
+    const storageRef = firebase.storage().ref(user.email);
+    const task = storageRef.put(file);
+    const userActual = db.collection("Usuarios").doc(user.email);
 
+    task.on(
+      "state_changed",
+      snapshot => {},
+      error => {
+        console.log(error.message);
+      },
+      async () => {
+        const photoURLNEW = await storageRef.getDownloadURL();
+        user.updateProfile({photoURLNEW}); //actualiza la foto en autentificacion
+        userActual.update({photoURL: photoURLNEW}); //actualiza la foto en la database
+      }
+    );
 
+    auth.currentUser.updateProfile({
+      photoURL: ""
+    });
+  }
 
   return (
-    <Consumer>
-      {({user, isAuth, userDB}) => (
+    <div>
+      {!isAuth ? (
+        <Redirect to="/login" />
+      ) : (
         <div>
           <AppForm>
-          <React.Fragment>
-            <Typography variant="h3" gutterBottom align="center">
-              Perfil de<br/>
-            </Typography>
-            <Typography variant="h4" gutterBottom marked="center" align="center">
-              {nombrePersona}
-            </Typography>
-          </React.Fragment>
+            <React.Fragment>
+              <Typography variant="h3" gutterBottom align="center">
+                Perfil de
+                <br />
+              </Typography>
+              <Typography
+                variant="h4"
+                gutterBottom
+                marked="center"
+                align="center"
+              >
+               {user.displayName}
+              </Typography>
+            </React.Fragment>
 
-          <Grid container justify="center" alignItems="center">
-            <Avatar alt="Remy Sharp" src={(user && user.photoUrl) || ''} className={classes.bigAvatar} />
-          </Grid>
+            <Grid
+              container
+              justify="center"
+              alignItems="center"
+              direction="column"
+              style={{}}
+            >
+              <Avatar
+                alt="Remy Sharp"
+                src={user && user.photoURL ? user.photoURL : ""}
+              />
 
-          <Form onSubmit={handleSubmit} subscription={{ submitting: true }}>
-            {({ handleSubmit2, submitting }) => (
-              <form onSubmit={handleSubmit2} className={classes.form} noValidate>
-                <Grid container spacing={2}>
-                  <Grid item xs={12} sm={6} margin-top = "0.8px" >
-                    <Field
-                      autoFocus
-                      component={RFTextField}
-                      autoComplete="fname"
-                      fullWidth
-                      defaultValue = {nombrePersona}
-                      label="Nombre"
-                      name="firstName"
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Field
-                      component={RFTextField}
-                      autoComplete="lname"
-                      fullWidth
-                      defaultValue = {apellidoPersona}
-                      label="Apellido"
-                      name="apellido"
-                    />
-                  </Grid>
-                </Grid>
-                <Field
-                  autoComplete="email"
-                  component={RFTextField}
-                  disabled={true}
-                  fullWidth
-                  defaultValue = {correoPersona}
-                  label="Correo"
-                  margin="normal"
-                  name="email"
+
+              <Grid>
+                {" "}
+                <input
+                  accept="image/*"
+                  className={classes.input}
+                  id="contained-button-file"
+                  
+                  multiple
+                  type="file"
+                  style={{
+                    display: "none"
+                  }}
+                  onChange={e => uploadImage(e)}
+                 
                 />
-                <FormSpy subscription={{ submitError: true }}>
-                  {({ submitError }) =>
-                    submitError ? (
-                      <FormFeedback className={classes.feedback} error>
-                        {submitError}
-                      </FormFeedback>
-                    ) : null
-                  }
-                </FormSpy>
-                <FormButton
-                  className={classes.button}
-                  disabled={submitting || sent}
-                  color="secondary"
-                  fullWidth
+                <label
+                  htmlFor="contained-button-file"
+                  style={{
+                    paddingTop: "10px"
+                  }}
                 >
-                  {submitting || sent ? "Actualizando…" : "Actualizar"}
-                </FormButton>
-              </form>
-            )}
-          </Form>
-        </AppForm>
-      </div>
+                  <Button
+                    id="upload-button"
+                    variant="contained"
+                    component="span"
+                    className={classes.button}
+                  >
+                    Actualizar Imagen
+                  </Button>
+                </label>
+              </Grid>
+            </Grid>
+
+            <Form onSubmit={handleSubmit} subscription={{ submitting: true }}>
+              {({ handleSubmit, submitting }) => (
+                <form
+                  onSubmit={handleSubmit}
+                  className={classes.form}
+                  noValidate
+                >
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} sm={6} margin-top="0.8px">
+                      <Field
+                        autoFocus
+                        component={RFTextField}
+                        autoComplete="fname"
+                        defaultValue = {user.name}
+                        fullWidth
+                        label="Nombre"
+                        name="firstName"
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <Field
+                        component={RFTextField}
+                        autoComplete="lname"
+                        fullWidth
+                        label="Apellido"
+                        name="apellido"
+                      />
+                    </Grid>
+                  </Grid>
+                  <Field
+                    autoComplete="email"
+                    component={RFTextField}
+                    disabled={submitting || sent}
+                    fullWidth
+                    defaultValue = {user.email}
+                    disabled = {true}
+                    label="Correo"
+                    margin="normal"
+                    name="email"
+                  />
+                  <FormSpy subscription={{ submitError: true }}>
+                    {({ submitError }) =>
+                      submitError ? (
+                        <FormFeedback className={classes.feedback} error>
+                          {submitError}
+                        </FormFeedback>
+                      ) : null
+                    }
+                  </FormSpy>
+                  <FormButton
+                    className={classes.button}
+                    disabled={submitting || sent}
+                    color="secondary"
+                    fullWidth
+                  >
+                    {submitting || sent ? "Actualizando…" : "Actualizar Información"}
+                  </FormButton>
+                </form>
+              )}
+            </Form>
+          </AppForm>
+        </div>
       )}
-    </Consumer>
-  )
+    </div>
+  );
 }
-
-
-function getDocument(db) {
-  // [START get_document]
-  let cityRef = db.collection('Usuarios').doc('hisaaca10@gmail.com');
-  let getDoc = cityRef.get()
-    .then(doc => {
-      if (!doc.exists) {
-        console.log('No such document!');
-      } else {
-        console.log('Document data:', doc.data());
-      }
-    })
-    .catch(err => {
-      console.log('Error getting document', err);
-    });
-  // [END get_document]
-
-  return getDoc;
-}
-
 
 export default withRoot(Perfil);
