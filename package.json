@@ -10,6 +10,7 @@
     "firebase": "^7.1.0",
     "markdown-to-jsx": "^6.10.3",
     "prop-types": "^15.7.2",
+    "qs": "^6.9.1",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
     "react-final-form": "^6.3.0",

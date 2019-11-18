@@ -35,10 +35,8 @@ export const signup = (email, password, firstName, lastName) => {
 export const getUser = () => {
   return db
     .collection("Usuarios")
-    .where("Email", "==", auth.currentUser.email)
-    .limit(1)
-    .get()
-    .then(r => r.docs[0]);
+    .doc(auth.currentUser.email)
+    .get().then(r => r.data());
 };
 
 export const readUser = async email => {

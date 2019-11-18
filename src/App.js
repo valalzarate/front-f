@@ -14,13 +14,13 @@ function App() {
   const [user, setUser] = useState(auth.currentUser);
 
   useEffect(() => {
-    auth.onAuthStateChanged(currentUser => {
+    auth.onAuthStateChanged(async currentUser => {
       if (currentUser) {
         setIsAuth(true);
-        setUser(currentUser);
+        setUser(await getUser());
       } else {
         setIsAuth(false);
-        setUser(currentUser);
+        setUser(null);
       }
     });
   });
@@ -34,7 +34,9 @@ function App() {
     setIsAuth(val);
   }
 
-  async function updateProfile() {}
+  async function updateProfile() {
+    setUser(await getUser());
+  }
 
   return (
     <div>
@@ -43,14 +45,14 @@ function App() {
           <AppAppBar
             isAuth={isAuth}
             setAuthentication={setAuthentication}
-            user={auth.currentUser}
-            updateProfile={() => {}}
+            user={user}
+            updateProfile={updateProfile}
           />
           <Routes
             isAuth={isAuth}
             setAuthentication={setAuthentication}
-            user={auth.currentUser}
-            updateProfile={() => {}}
+            user={user}
+            updateProfile={updateProfile}
           />
           <AppFooter />
         </React.Fragment>
