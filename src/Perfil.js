@@ -12,14 +12,12 @@ import FormButton from "./modules/form/FormButton";
 import FormFeedback from "./modules/form/FormFeedback";
 import Grid from "@material-ui/core/Grid";
 import firebase from "firebase";
-import { Redirect } from "react-router-dom";
+import { Redirect, useLocation } from "react-router-dom";
 
 export const auth = firebase.auth();
 export const db = firebase.firestore();
 
-var nombrePersona;
-var    apellidoPersona;
-var    correoPersona;
+var correoPersona;
 
 const useStyles = makeStyles(theme => ({
   igFluid: {
@@ -38,11 +36,11 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function Perfil({ user, isAuth, userDB }) {
+function Perfil({ user, isAuth, updateProfile }) {
   const classes = useStyles();
   require("firebase/firestore");
 
- const db = firebase.firestore();
+  const db = firebase.firestore();
   const [sent, setSent] = React.useState(false);
 
   const handleSubmit = async ({ firstName, apellido }) => {
@@ -51,24 +49,13 @@ function Perfil({ user, isAuth, userDB }) {
     try {
       const user = auth.currentUser;
       const userActual = db.collection("Usuarios").doc(user.email);
-      user.updateProfile({ displayName: firstName +" "+ apellido});
-      userActual.update({Nombre: firstName,Apellido: apellido});
+      user.updateProfile({ displayName: firstName + " " + apellido });
+      userActual.update({ Nombre: firstName, Apellido: apellido });
+      updateProfile();
     } catch (error) {
       setSent(false);
     }
-    
-    
   };
-
-  try {
-    let docRef = db.collection('Usuarios').doc(user.email).get().then(doc => {
-    nombrePersona = doc.get("Nombre");
-    apellidoPersona = doc.get("Apellido");
-    correoPersona = doc.get("Email");
-    console.log("ekl correoSd: "+correoPersona);
-  })
-  } catch (error) {}
-  
 
   function uploadImage(event) {
     const user = auth.currentUser;
@@ -85,15 +72,18 @@ function Perfil({ user, isAuth, userDB }) {
       },
       async () => {
         const photoURLNEW = await storageRef.getDownloadURL();
-        user.updateProfile({photoURLNEW}); //actualiza la foto en autentificacion
-        userActual.update({photoURL: photoURLNEW}); //actualiza la foto en la database
+
+        console.log(photoURLNEW);
+
+        user.updateProfile({ photoURL: photoURLNEW }); //actualiza la foto en autentificacion
+        userActual.update({ photoURL: photoURLNEW }); //actualiza la foto en la database
+
+        updateProfile();
       }
     );
-
-    auth.currentUser.updateProfile({
-      photoURL: ""
-    });
   }
+
+  console.log(new URLSearchParams(useLocation().search));
 
   return (
     <div>
@@ -113,7 +103,7 @@ function Perfil({ user, isAuth, userDB }) {
                 marked="center"
                 align="center"
               >
-               {user.displayName}
+                {user && user.displayName}
               </Typography>
             </React.Fragment>
 
@@ -124,11 +114,7 @@ function Perfil({ user, isAuth, userDB }) {
               direction="column"
               style={{}}
             >
-              <Avatar
-                alt="Remy Sharp"
-                src={user && user.photoURL ? user.photoURL : ""}
-              />
-
+              <Avatar src={user && user.photoURL ? user.photoURL : ""} />
 
               <Grid>
                 {" "}
@@ -136,14 +122,12 @@ function Perfil({ user, isAuth, userDB }) {
                   accept="image/*"
                   className={classes.input}
                   id="contained-button-file"
-                  
                   multiple
                   type="file"
                   style={{
                     display: "none"
                   }}
                   onChange={e => uploadImage(e)}
-                 
                 />
                 <label
                   htmlFor="contained-button-file"
@@ -176,7 +160,7 @@ function Perfil({ user, isAuth, userDB }) {
                         autoFocus
                         component={RFTextField}
                         autoComplete="fname"
-                        defaultValue = {user.name}
+                        defaultValue={user.name}
                         fullWidth
                         label="Nombre"
                         name="firstName"
@@ -197,8 +181,8 @@ function Perfil({ user, isAuth, userDB }) {
                     component={RFTextField}
                     disabled={submitting || sent}
                     fullWidth
-                    defaultValue = {user.email}
-                    disabled = {true}
+                    defaultValue={user.email}
+                    disabled={true}
                     label="Correo"
                     margin="normal"
                     name="email"
@@ -218,7 +202,9 @@ function Perfil({ user, isAuth, userDB }) {
                     color="secondary"
                     fullWidth
                   >
-                    {submitting || sent ? "Actualizando…" : "Actualizar Información"}
+                    {submitting || sent
+                      ? "Actualizando…"
+                      : "Actualizar Información"}
                   </FormButton>
                 </form>
               )}

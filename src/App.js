@@ -7,16 +7,14 @@ import AppAppBar from "./modules/views/AppAppBar";
 import AppFooter from "./modules/views/AppFooter";
 import Routes from "./Router";
 
-import { signout, auth, db } from "./services/firebase";
+import { signout, auth, db, getUser } from "./services/firebase";
 
 function App() {
   const [isAuth, setIsAuth] = useState(!!auth.currentUser);
   const [user, setUser] = useState(auth.currentUser);
- 
 
   useEffect(() => {
     auth.onAuthStateChanged(currentUser => {
-      
       if (currentUser) {
         setIsAuth(true);
         setUser(currentUser);
@@ -36,6 +34,7 @@ function App() {
     setIsAuth(val);
   }
 
+  async function updateProfile() {}
 
   return (
     <div>
@@ -44,12 +43,14 @@ function App() {
           <AppAppBar
             isAuth={isAuth}
             setAuthentication={setAuthentication}
-            user={user}
+            user={auth.currentUser}
+            updateProfile={() => {}}
           />
           <Routes
             isAuth={isAuth}
             setAuthentication={setAuthentication}
             user={auth.currentUser}
+            updateProfile={() => {}}
           />
           <AppFooter />
         </React.Fragment>

@@ -32,17 +32,28 @@ export const signup = (email, password, firstName, lastName) => {
     });
 };
 
+export const getUser = () => {
+  return db
+    .collection("Usuarios")
+    .where("Email", "==", auth.currentUser.email)
+    .limit(1)
+    .get()
+    .then(r => r.docs[0]);
+};
+
 export const readUser = async email => {
   try {
     const data = await db
       .collection("Usuarios")
       .where("Email", "==", email)
       .get();
+
     let user = [];
     data.forEach(doc => {
       console.log(doc);
       user.push(doc.data());
     });
+
     return user;
   } catch (err) {
     return console.log(err);
