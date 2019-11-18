@@ -13,6 +13,7 @@ import Eventos from "./modules/views/Eventos";
 import Contact from "./Contact";
 import Perfil from "./Perfil";
 import crearEvento from "./crearEvento";
+import Cargando from "./modules/views/Cargando";
 
 export default function Router(props) {
   const routes = [
@@ -27,6 +28,7 @@ export default function Router(props) {
     { path: "/contact", component: Contact },
     { path: "/perfil", component: Perfil },
     { path: "/crearEvento", component: crearEvento },
+    { path: "/cargando", component: Cargando },
   ];
 
   return routes.map(route => (
