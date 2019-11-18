@@ -32,18 +32,19 @@ export const signup = (email, password, firstName, lastName) => {
     });
 };
 
-export const readUser = async (email) => {
+export const readUser = async email => {
   try {
-    const data = await db.collection("Usuarios").where('Email', '==', email)
+    const data = await db
+      .collection("Usuarios")
+      .where("Email", "==", email)
       .get();
     let user = [];
-    data.forEach((doc) => {
+    data.forEach(doc => {
       console.log(doc);
       user.push(doc.data());
     });
     return user;
-  }
-  catch (err) {
+  } catch (err) {
     return console.log(err);
   }
 };
