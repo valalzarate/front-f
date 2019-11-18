@@ -26,7 +26,7 @@ export default function Router(props) {
     { path: "/eventos", component: Eventos },
     { path: "/contact", component: Contact },
     { path: "/perfil", component: Perfil },
-    { path: "/crearEvento", component: crearEvento },
+    { path: "/crearEvento", component: crearEvento }
   ];
 
   return routes.map(route => (

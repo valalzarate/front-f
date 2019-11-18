@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function SignUp({ setAuthentication, isAuth }) {
+function SignUp({ setAuthentication, isAuth, user  }) {
   const classes = useStyles();
   const [sent, setSent] = React.useState(false);
 
@@ -62,7 +62,7 @@ function SignUp({ setAuthentication, isAuth }) {
 
   return (
     <div>
-      {isAuth ? <div /> : <Redirect to="/login" />}
+      {isAuth ? <div /> : <Redirect to="/login?continue=/crearEvento" />}
 
       <AppForm>
         <React.Fragment>

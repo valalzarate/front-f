@@ -83,12 +83,10 @@ function Perfil({ user, isAuth, updateProfile }) {
     );
   }
 
-  console.log(new URLSearchParams(useLocation().search));
-
   return (
     <div>
       {!isAuth ? (
-        <Redirect to="/login" />
+        <Redirect to="/login?continue=/perfil" />
       ) : (
         <div>
           <AppForm>
@@ -103,7 +101,7 @@ function Perfil({ user, isAuth, updateProfile }) {
                 marked="center"
                 align="center"
               >
-                {user && user.displayName}
+                {user ? `${user.Nombre} ${user.Apellido}` : ""}
               </Typography>
             </React.Fragment>
 
@@ -160,7 +158,7 @@ function Perfil({ user, isAuth, updateProfile }) {
                         autoFocus
                         component={RFTextField}
                         autoComplete="fname"
-                        defaultValue={user.name}
+                        defaultValue={user ? user.name : ""}
                         fullWidth
                         label="Nombre"
                         name="firstName"
@@ -181,7 +179,7 @@ function Perfil({ user, isAuth, updateProfile }) {
                     component={RFTextField}
                     disabled={submitting || sent}
                     fullWidth
-                    defaultValue={user.email}
+                    defaultValue={user ? user.email : ""}
                     disabled={true}
                     label="Correo"
                     margin="normal"

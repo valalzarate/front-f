@@ -56,6 +56,17 @@ function AppAppBar({ classes, isAuth, setAuthentication, user }) {
           <div className={classes.right}>
             {isAuth && user ? (
               <div>
+                {
+                  <Link
+                    color="inherit"
+                    variant="h6"
+                    underline="none"
+                    className={classes.rightLink}
+                    href="/crearEvento"
+                  >
+                    Crear evento
+                  </Link>
+                }
                 <Link
                   color="inherit"
                   variant="h6"
@@ -63,7 +74,7 @@ function AppAppBar({ classes, isAuth, setAuthentication, user }) {
                   className={classes.rightLink}
                   href="/perfil"
                 >
-                  {`¡Hola, ${user.displayName}!`}
+                  {`¡Hola, ${user.Nombre}!`}
                 </Link>
                 <Link
                   color="inherit"
