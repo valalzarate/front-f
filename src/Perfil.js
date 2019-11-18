@@ -44,6 +44,8 @@ function Perfil({ user, isAuth, updateProfile }) {
   const handleSubmit = async ({ firstName, apellido }) => {
     setSent(true);
 
+    console.log({ user });
+
     try {
       await Promise.all([
         auth.currentUser.updateProfile({
@@ -62,11 +64,10 @@ function Perfil({ user, isAuth, updateProfile }) {
   };
 
   function uploadImage(event) {
-    const user = auth.currentUser;
     const file = event.target.files[0];
-    const storageRef = firebase.storage().ref(user.email);
+    const storageRef = firebase.storage().ref(`users/${user.Email}/profile`);
     const task = storageRef.put(file);
-    const userActual = db.collection("Usuarios").doc(user.email);
+    const userActual = db.collection("Usuarios").doc(user.Email);
 
     task.on(
       "state_changed",
@@ -117,7 +118,6 @@ function Perfil({ user, isAuth, updateProfile }) {
               <Avatar src={user && user.photoURL ? user.photoURL : ""} />
 
               <Grid>
-                {" "}
                 <input
                   accept="image/*"
                   className={classes.input}
@@ -160,7 +160,7 @@ function Perfil({ user, isAuth, updateProfile }) {
                         autoFocus
                         component={RFTextField}
                         autoComplete="fname"
-                        defaultValue={user ? user.name : ""}
+                        defaultValue={user ? user.Nombre : ""}
                         fullWidth
                         label="Nombre"
                         name="firstName"
@@ -170,6 +170,7 @@ function Perfil({ user, isAuth, updateProfile }) {
                       <Field
                         component={RFTextField}
                         autoComplete="lname"
+                        defaultValue={user ? user.Apellido : ""}
                         fullWidth
                         label="Apellido"
                         name="apellido"
@@ -181,7 +182,7 @@ function Perfil({ user, isAuth, updateProfile }) {
                     component={RFTextField}
                     disabled={submitting || sent}
                     fullWidth
-                    defaultValue={user ? user.email : ""}
+                    defaultValue={user ? user.Email : ""}
                     disabled={true}
                     label="Correo"
                     margin="normal"

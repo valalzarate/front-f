@@ -1,8 +1,10 @@
 import withRoot from "./modules/withRoot";
 // --- Post bootstrap -----
 import React from "react";
+import firebase from "firebase";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
 import { Field, Form, FormSpy } from "react-final-form";
 import AppForm from "./modules/views/AppForm";
 import Typography from "./modules/components/Typography";
@@ -35,15 +37,38 @@ function SignUp({ setAuthentication, isAuth, user }) {
   const classes = useStyles();
   const [sent, setSent] = React.useState(false);
   const [category, setCategory] = React.useState("Playeros");
+  const [image, setImage] = React.useState(null);
 
   const validate = values => {
     const errors = required(
-      ["titulo", "autor", "lugar", "descripcion", "fecha"],
+      ["titulo", "lugar", "descripcion", "fecha"],
       values
     );
 
     return errors;
   };
+
+  async function uploadImage(file, idEvento) {
+    console.log(file);
+
+    const storageRef = firebase
+      .storage()
+      .ref(`events/${user.Email}/${idEvento}`);
+    const task = storageRef.put(file);
+
+    task.on(
+      "state_changed",
+      snapshot => {},
+      error => {
+        console.log(error.message);
+      },
+      async () => {
+        const photoURL = await storageRef.getDownloadURL();
+
+        console.log(photoURL)
+      }
+    );
+  }
 
   const onSubmit = async ({ titulo, lugar, descripcion, fecha }) => {
     setSent(true);
@@ -54,6 +79,8 @@ function SignUp({ setAuthentication, isAuth, user }) {
 
     try {
       console.log("titulo: " + titulo);
+      console.log(image);
+
       const newPost = await addpost(
         titulo,
         `${user.Nombre} ${user.Apellido}`,
@@ -61,9 +88,11 @@ function SignUp({ setAuthentication, isAuth, user }) {
         descripcion,
         category,
         fecha,
-        "aun no hay",
+        "jeje",
         user.Email
       );
+
+      const url = await uploadImage(image, newPost.id);
 
       newPost
         .get()
@@ -107,6 +136,35 @@ function SignUp({ setAuthentication, isAuth, user }) {
               className={classes.form}
               noValidate
             >
+              <Grid>
+                <input
+                  accept="image/*"
+                  className={classes.input}
+                  id="contained-button-file"
+                  multiple
+                  type="file"
+                  style={{
+                    display: "none"
+                  }}
+                  onChange={e => setImage(e.target.value)}
+                />
+                <label
+                  htmlFor="contained-button-file"
+                  style={{
+                    paddingTop: "10px"
+                  }}
+                >
+                  <Button
+                    id="upload-button"
+                    variant="contained"
+                    component="span"
+                    className={classes.button}
+                  >
+                    Cargar Imagen
+                  </Button>
+                </label>
+              </Grid>
+
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={12}>
                   <Field

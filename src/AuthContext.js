@@ -38,7 +38,7 @@ const Provider = props => {
   });
 
   async function updateProfile() {
-    setUser(await getUser());
+    setUser(await getUser(auth.currentUser.email));
   }
 
   return (
