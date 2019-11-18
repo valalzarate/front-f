@@ -5,44 +5,41 @@ import { signout, auth, db } from "./services/firebase";
 const AuthContext = React.createContext();
 const Consumer = AuthContext.Consumer;
 
+const getUser = email =>
+  db
+    .collection("Usuarios")
+    .doc(email)
+    .get()
+    .then(d => d.data());
+
 const Provider = props => {
-  const [isAuth, setIsAuth] = useState(!!auth.currentUser);
-  const [user, setUser] = useState(auth.currentUser);
-  const [userDB, userDBLoaded] = React.useState(null);
+  const [isAuth, setIsAuth] = useState(false);
+  const [user, setUser] = useState(null);
 
   const setAuthentication = async val => {
     if (!val) {
       sessionStorage.clear();
       await signout();
-
-      console.log("BAH");
     }
 
     setIsAuth(val);
   };
 
-  const getUserDB = async email => {
-    const user = await db
-      .collection("Usuarios")
-      .doc(email)
-      .get();
-    userDBLoaded(user);
-  };
-
   useEffect(() => {
-    auth.onAuthStateChanged(currentUser => {
-      console.log(currentUser);
-
+    auth.onAuthStateChanged(async currentUser => {
       if (currentUser) {
         setIsAuth(true);
-        setUser(currentUser);
-        getUserDB(currentUser.email);
+        setUser(await getUser(currentUser.email));
       } else {
         setIsAuth(false);
-        setUser(currentUser);
+        setUser(null);
       }
     });
   });
+
+  async function updateProfile() {
+    setUser(await getUser());
+  }
 
   return (
     <AuthContext.Provider
@@ -50,7 +47,7 @@ const Provider = props => {
         isAuth: isAuth,
         setAuthentication: setAuthentication,
         user: user,
-        userDB: userDB
+        updateProfile: updateProfile
       }}
     >
       {props.children}

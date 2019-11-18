@@ -17,8 +17,6 @@ import { Redirect, useLocation } from "react-router-dom";
 export const auth = firebase.auth();
 export const db = firebase.firestore();
 
-var correoPersona;
-
 const useStyles = makeStyles(theme => ({
   igFluid: {
     maxWidth: "100%",
@@ -47,10 +45,16 @@ function Perfil({ user, isAuth, updateProfile }) {
     setSent(true);
 
     try {
-      const user = auth.currentUser;
-      const userActual = db.collection("Usuarios").doc(user.email);
-      user.updateProfile({ displayName: firstName + " " + apellido });
-      userActual.update({ Nombre: firstName, Apellido: apellido });
+      await Promise.all([
+        auth.currentUser.updateProfile({
+          displayName: firstName + " " + apellido
+        }),
+        db
+          .collection("Usuarios")
+          .doc(user.Email)
+          .update({ Nombre: firstName, Apellido: apellido })
+      ]);
+
       updateProfile();
     } catch (error) {
       setSent(false);
@@ -73,9 +77,7 @@ function Perfil({ user, isAuth, updateProfile }) {
       async () => {
         const photoURLNEW = await storageRef.getDownloadURL();
 
-        console.log(photoURLNEW);
-
-        user.updateProfile({ photoURL: photoURLNEW }); //actualiza la foto en autentificacion
+        auth.currentUser.updateProfile({ photoURL: photoURLNEW }); //actualiza la foto en autentificacion
         userActual.update({ photoURL: photoURLNEW }); //actualiza la foto en la database
 
         updateProfile();

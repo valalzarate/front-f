@@ -9,6 +9,9 @@ import Typography from "./modules/components/Typography";
 import FileUpload from "./modules/components/FileUpload";
 import { required } from "./modules/form/validation";
 import RFTextField from "./modules/form/RFTextField";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
+import InputLabel from "@material-ui/core/InputLabel";
 import FormButton from "./modules/form/FormButton";
 import FormFeedback from "./modules/form/FormFeedback";
 import { Redirect } from "react-router-dom";
@@ -28,9 +31,10 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function SignUp({ setAuthentication, isAuth, user  }) {
+function SignUp({ setAuthentication, isAuth, user }) {
   const classes = useStyles();
   const [sent, setSent] = React.useState(false);
+  const [category, setCategory] = React.useState("Playeros");
 
   const validate = values => {
     const errors = required(
@@ -41,20 +45,30 @@ function SignUp({ setAuthentication, isAuth, user  }) {
     return errors;
   };
 
-  const onSubmit = async ({ titulo, autor, lugar, descripcion, fecha }) => {
+  const onSubmit = async ({ titulo, lugar, descripcion, fecha }) => {
     setSent(true);
+
+    console.log({
+      category
+    });
 
     try {
       console.log("titulo: " + titulo);
-      addpost(
+      const newPost = await addpost(
         titulo,
-        autor,
+        `${user.Nombre} ${user.Apellido}`,
         lugar,
         descripcion,
+        category,
         fecha,
         "aun no hay",
-        "hisaaca20@gmail.com"
+        user.Email
       );
+
+      newPost
+        .get()
+        .then(r => r.data())
+        .then(console.log);
     } catch (e) {
       setSent(false);
     }
@@ -62,7 +76,15 @@ function SignUp({ setAuthentication, isAuth, user  }) {
 
   return (
     <div>
-      {isAuth ? <div /> : <Redirect to="/login?continue=/crearEvento" />}
+      {isAuth ? (
+        user && user.TipoUsuario == 0 ? (
+          <Redirect to="/" />
+        ) : (
+          <div />
+        )
+      ) : (
+        <Redirect to="/login?continue=/crearEvento" />
+      )}
 
       <AppForm>
         <React.Fragment>
@@ -86,7 +108,7 @@ function SignUp({ setAuthentication, isAuth, user  }) {
               noValidate
             >
               <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} sm={12}>
                   <Field
                     autoFocus
                     component={RFTextField}
@@ -97,17 +119,24 @@ function SignUp({ setAuthentication, isAuth, user  }) {
                     required
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Field
-                    component={RFTextField}
-                    autoComplete="lname"
-                    fullWidth
-                    label="Autor"
-                    name="autor"
-                    required
-                  />
-                </Grid>
               </Grid>
+
+              <InputLabel style={{ marginTop: "10px" }}>Categoria</InputLabel>
+              <Select
+                name="categoria"
+                onChange={e => setCategory(e.target.value)}
+                value={category}
+              >
+                <MenuItem value="Playeros">Playeros</MenuItem>
+                <MenuItem value="Relajación">Relajación</MenuItem>
+                <MenuItem value="Aventureros">Aventureros</MenuItem>
+                <MenuItem value="Tour">Tour</MenuItem>
+                <MenuItem value="Shopping">Shopping</MenuItem>
+                <MenuItem value="Gastronómicos">Gastronómicos</MenuItem>
+                <MenuItem value="Caminatas">Caminatas</MenuItem>
+                <MenuItem value="Fitness">Fitness</MenuItem>
+                <MenuItem value="Lectura">Lectura</MenuItem>
+              </Select>
 
               <Field
                 fullWidth
@@ -145,8 +174,6 @@ function SignUp({ setAuthentication, isAuth, user  }) {
                 type="fecha"
                 margin="normal"
               />
-
-              <FileUpload />
 
               <FormSpy subscription={{ submitError: true }}>
                 {({ submitError }) =>

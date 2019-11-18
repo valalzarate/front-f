@@ -56,7 +56,7 @@ function AppAppBar({ classes, isAuth, setAuthentication, user }) {
           <div className={classes.right}>
             {isAuth && user ? (
               <div>
-                {
+                {user.TipoUsuario == 1 ? (
                   <Link
                     color="inherit"
                     variant="h6"
@@ -66,7 +66,9 @@ function AppAppBar({ classes, isAuth, setAuthentication, user }) {
                   >
                     Crear evento
                   </Link>
-                }
+                ) : (
+                  <div />
+                )}
                 <Link
                   color="inherit"
                   variant="h6"

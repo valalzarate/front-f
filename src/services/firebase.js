@@ -16,6 +16,7 @@ firebase.initializeApp({
 });
 
 export const auth = firebase.auth();
+auth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
 export const db = firebase.firestore();
 
 export const login = (email, password) => {
@@ -36,7 +37,8 @@ export const getUser = () => {
   return db
     .collection("Usuarios")
     .doc(auth.currentUser.email)
-    .get().then(r => r.data());
+    .get()
+    .then(r => r.data());
 };
 
 export const readUser = async email => {
@@ -82,20 +84,21 @@ export const addpost = (
   autor,
   lugar,
   descripcion,
+  categoria,
   fecha,
   imgLink,
   idUsuario
 ) => {
-  db.collection("Eventos")
-    .doc(titulo)
-    .set({
-      Titulo: titulo,
-      Autores: autor,
-      Lugar: lugar,
-      Descripcion: descripcion,
-      Fecha: fecha,
-      photoEvent: imgLink
-    });
+  return db.collection("Eventos").add({
+    idUsuario,
+    Titulo: titulo,
+    Autores: autor,
+    Lugar: lugar,
+    Descripcion: descripcion,
+    Categoria: categoria,
+    Fecha: fecha,
+    photoEvent: imgLink
+  });
 };
 
 export const signout = () => {
