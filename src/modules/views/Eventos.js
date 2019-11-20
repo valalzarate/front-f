@@ -10,8 +10,13 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import IconButton from "@material-ui/core/IconButton";
 import FavoriteIcon from "@material-ui/icons/Favorite";
-import ShareIcon from "@material-ui/icons/Share";
-import { db } from "../../services/firebase";
+import BookmarkIcon from "@material-ui/icons/Bookmark";
+import {
+  db,
+  getAllEvents,
+  likeEvent,
+  getAllGustados
+} from "../../services/firebase";
 import qs from "qs";
 
 const useStyles = makeStyles(theme => ({
@@ -46,37 +51,15 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const eventsQuery = db.collection("Eventos");
-
-async function getDocsDataFromQuery(query) {
-  return query.docs.map(doc => ({
-    id: doc.id,
-    ...doc.data()
-  }));
-}
-
-async function getAllEvents({ categoria }) {
-  let q = eventsQuery;
-
-  if (categoria) {
-    q = eventsQuery.where("Categoria", "==", categoria);
-  }
-
-  return q.get().then(getDocsDataFromQuery);
-}
-
-export default function Eventos({ location }) {
+export default function Eventos({ isAuth, user, location }) {
   const query = qs.parse(location.search.slice(1));
 
   const classes = useStyles();
   const [events, setEvents] = React.useState([]);
+  const [gustados, setGustados] = React.useState([]);
 
   React.useEffect(() => {
-    getAllEvents({
-      categoria: query.categoria
-    }).then(docs => {
-      setEvents(docs);
-    });
+    getAllEvents({ categoria: query.categoria }).then(setEvents);
   });
 
   return (
@@ -139,10 +122,10 @@ export default function Eventos({ location }) {
                   </CardContent>
                   <CardActions>
                     <IconButton aria-label="add to favorites">
-                      <FavoriteIcon />
+                      <FavoriteIcon color={"error"} />
                     </IconButton>
                     <IconButton aria-label="share">
-                      <ShareIcon />
+                      <BookmarkIcon />
                     </IconButton>
                     <Button size="small" color="primary">
                       ver más

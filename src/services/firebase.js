@@ -19,6 +19,8 @@ export const auth = firebase.auth();
 auth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
 export const db = firebase.firestore();
 
+export const eventsQuery = db.collection("Eventos");
+
 export const login = (email, password) => {
   return auth.signInWithEmailAndPassword(email, password);
 };
@@ -108,3 +110,44 @@ export const signout = () => {
 export const passwordRecovery = email => {
   return auth.sendPasswordResetEmail(email);
 };
+
+export async function getDocsDataFromQuery(query) {
+  return query.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data()
+  }));
+}
+
+export async function getAllEvents({ categoria }) {
+  let q = eventsQuery;
+
+  if (categoria) {
+    q = eventsQuery.where("Categoria", "==", categoria);
+  }
+
+  return q.get().then(getDocsDataFromQuery);
+}
+
+export async function getAllGustados() {
+  if (!auth.currentUser) {
+    return [];
+  }
+
+  return db
+    .collection("Gustados")
+    .where("idUsuario", "==", auth.currentUser.email)
+    .get()
+    .then(getDocsDataFromQuery);
+}
+
+export async function likeEvent(idEvento, titulo) {
+  const like = {
+    idEvento,
+    titulo,
+    idUsuario: auth.currentUser.email
+  };
+
+  await db.collection("Gustados").add(like);
+
+  return like;
+}
