@@ -11,6 +11,7 @@ import Container from "@material-ui/core/Container";
 import IconButton from "@material-ui/core/IconButton";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import ShareIcon from "@material-ui/icons/Share";
+import { db } from "../../services/firebase";
 
 const useStyles = makeStyles(theme => ({
   icon: {
@@ -44,10 +45,25 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-
 export default function Eventos() {
   const classes = useStyles();
+
+  const [events, setEvents] = React.useState([]);
+
+  db.collection("Eventos")
+    .limit(10)
+    .get()
+    .then(col => {
+      col.forEach(doc => {
+        setEvents([
+          ...events,
+          {
+            id: doc.id,
+            ...doc.data()
+          }
+        ]);
+      });
+    });
 
   return (
     <React.Fragment>
@@ -55,11 +71,22 @@ export default function Eventos() {
         {/* Hero unit */}
         <div className={classes.heroContent}>
           <Container className={classes.root} component="section">
-          <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
+            <Typography
+              component="h1"
+              variant="h2"
+              align="center"
+              color="textPrimary"
+              gutterBottom
+            >
               Eventos
             </Typography>
-            <Typography variant="h5" align="center" color="textSecondary" paragraph>
-             Aquí podrás encontrar todos los eventos que tenemos para ti.
+            <Typography
+              variant="h5"
+              align="center"
+              color="textSecondary"
+              paragraph
+            >
+              Aquí podrás encontrar todos los eventos que tenemos para ti.
             </Typography>
             <div className={classes.heroButtons}></div>
           </Container>
@@ -67,8 +94,8 @@ export default function Eventos() {
         <Container className={classes.cardGrid} maxWidth="md">
           {/* End hero unit */}
           <Grid container spacing={4}>
-            {cards.map(card => (
-              <Grid item key={card} xs={12} sm={6} md={4}>
+            {events.map(evento => (
+              <Grid item key={evento.id} xs={12} sm={6} md={4}>
                 <Card className={classes.card}>
                   <CardMedia
                     className={classes.cardMedia}
@@ -77,7 +104,7 @@ export default function Eventos() {
                   />
                   <CardContent className={classes.cardContent}>
                     <Typography gutterBottom variant="h5" component="h2">
-                      Titulo evento
+                      {evento.Titulo}
                     </Typography>
                     <Typography>Descrpción breve del evento.</Typography>
                   </CardContent>
