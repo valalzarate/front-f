@@ -65,6 +65,7 @@ function Perfil({ user, isAuth, updateProfile }) {
 
   function uploadImage(event) {
     const file = event.target.files[0];
+    console.log("el archivo se llama: "+file);
     const storageRef = firebase.storage().ref(`users/${user.Email}/profile`);
     const task = storageRef.put(file);
     const userActual = db.collection("Usuarios").doc(user.Email);

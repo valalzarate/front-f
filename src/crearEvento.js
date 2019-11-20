@@ -18,7 +18,7 @@ import FormButton from "./modules/form/FormButton";
 import FormFeedback from "./modules/form/FormFeedback";
 import { Redirect } from "react-router-dom";
 
-import { addpost } from "./services/firebase";
+import { addpost, db } from "./services/firebase";
 
 const useStyles = makeStyles(theme => ({
   form: {
@@ -49,7 +49,8 @@ function SignUp({ setAuthentication, isAuth, user }) {
   };
 
   async function uploadImage(file, idEvento) {
-    console.log(file);
+
+    const userActual = db.collection("Eventos").doc(idEvento);
 
     const storageRef = firebase
       .storage()
@@ -64,8 +65,10 @@ function SignUp({ setAuthentication, isAuth, user }) {
       },
       async () => {
         const photoURL = await storageRef.getDownloadURL();
+        userActual.update({
+          photoEvent: photoURL
+        });
 
-        console.log(photoURL)
       }
     );
   }
@@ -73,14 +76,7 @@ function SignUp({ setAuthentication, isAuth, user }) {
   const onSubmit = async ({ titulo, lugar, descripcion, fecha }) => {
     setSent(true);
 
-    console.log({
-      category
-    });
-
     try {
-      console.log("titulo: " + titulo);
-      console.log(image);
-
       const newPost = await addpost(
         titulo,
         `${user.Nombre} ${user.Apellido}`,
@@ -88,12 +84,12 @@ function SignUp({ setAuthentication, isAuth, user }) {
         descripcion,
         category,
         fecha,
-        "jeje",
+        "loading..",
         user.Email
       );
 
-      const url = await uploadImage(image, newPost.id);
-
+       const url = await uploadImage(image, newPost.id);
+      
       newPost
         .get()
         .then(r => r.data())
@@ -146,7 +142,7 @@ function SignUp({ setAuthentication, isAuth, user }) {
                   style={{
                     display: "none"
                   }}
-                  onChange={e => setImage(e.target.value)}
+                  onChange={e => setImage(e.target.files[0])}
                 />
                 <label
                   htmlFor="contained-button-file"
