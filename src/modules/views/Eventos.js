@@ -12,6 +12,7 @@ import IconButton from "@material-ui/core/IconButton";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import ShareIcon from "@material-ui/icons/Share";
 import { db } from "../../services/firebase";
+import qs from "qs";
 
 const useStyles = makeStyles(theme => ({
   icon: {
@@ -45,25 +46,38 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function Eventos() {
-  const classes = useStyles();
+const eventsQuery = db.collection("Eventos");
 
+async function getDocsDataFromQuery(query) {
+  return query.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data()
+  }));
+}
+
+async function getAllEvents({ categoria }) {
+  let q = eventsQuery;
+
+  if (categoria) {
+    q = eventsQuery.where("Categoria", "==", categoria);
+  }
+
+  return q.get().then(getDocsDataFromQuery);
+}
+
+export default function Eventos({ location }) {
+  const query = qs.parse(location.search.slice(1));
+
+  const classes = useStyles();
   const [events, setEvents] = React.useState([]);
 
-  db.collection("Eventos")
-    .limit(10)
-    .get()
-    .then(col => {
-      col.forEach(doc => {
-        setEvents([
-          ...events,
-          {
-            id: doc.id,
-            ...doc.data()
-          }
-        ]);
-      });
+  React.useEffect(() => {
+    getAllEvents({
+      categoria: query.categoria
+    }).then(docs => {
+      setEvents(docs);
     });
+  });
 
   return (
     <React.Fragment>
@@ -78,7 +92,7 @@ export default function Eventos() {
               color="textPrimary"
               gutterBottom
             >
-              Eventos
+              Eventos {query.categoria}
             </Typography>
             <Typography
               variant="h5"
@@ -99,14 +113,29 @@ export default function Eventos() {
                 <Card className={classes.card}>
                   <CardMedia
                     className={classes.cardMedia}
-                    image="https://source.unsplash.com/random"
+                    image={evento.photoEvent}
                     title="Image title"
                   />
                   <CardContent className={classes.cardContent}>
                     <Typography gutterBottom variant="h5" component="h2">
                       {evento.Titulo}
                     </Typography>
-                    <Typography>Descrpción breve del evento.</Typography>
+                    <Typography>{evento.Descripcion}</Typography>
+
+                    <ul>
+                      <li>
+                        <b>Fecha: </b> {evento.Fecha}
+                      </li>
+                      <li>
+                        <b>Lugar: </b> {evento.Lugar}
+                      </li>
+                      <li>
+                        <b>Categoría: </b> {evento.Categoria}
+                      </li>
+                      <li>
+                        <b>Autor: </b> {evento.Autores}
+                      </li>
+                    </ul>
                   </CardContent>
                   <CardActions>
                     <IconButton aria-label="add to favorites">
