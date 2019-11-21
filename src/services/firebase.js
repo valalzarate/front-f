@@ -77,7 +77,8 @@ export const adduser = (
       Apellido: lastName,
       Email: email,
       TipoUsuario: typeUser,
-      photoURL: urlphoto
+      photoURL: urlphoto,
+      likes: []
     });
 };
 
@@ -99,7 +100,8 @@ export const addpost = (
     Descripcion: descripcion,
     Categoria: categoria,
     Fecha: fecha,
-    photoEvent: imgLink
+    photoEvent: imgLink,
+    likes: 0
   });
 };
 
@@ -126,40 +128,4 @@ export async function getAllEvents({ categoria }) {
   }
 
   return q.get().then(getDocsDataFromQuery);
-}
-
-export async function getAllGustados() {
-  if (!auth.currentUser) {
-    return [];
-  }
-
-  return db
-    .collection("Gustados")
-    .where("idUsuario", "==", auth.currentUser.email)
-    .get()
-    .then(getDocsDataFromQuery);
-}
-
-export async function getAllAsistencias() {
-  if (!auth.currentUser) {
-    return [];
-  }
-
-  return db
-    .collection("Asistencias")
-    .where("idUsuario", "==", auth.currentUser.email)
-    .get()
-    .then(getDocsDataFromQuery);
-}
-
-export async function likeEvent(idEvento, titulo) {
-  const like = {
-    idEvento,
-    titulo,
-    idUsuario: auth.currentUser.email
-  };
-
-  await db.collection("Gustados").add(like);
-
-  return like;
 }

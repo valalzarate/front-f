@@ -8,11 +8,9 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import IconButton from "@material-ui/core/IconButton";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import BookmarkIcon from "@material-ui/icons/Bookmark";
-import { getAllEvents } from "../../services/firebase";
+import { getAllEvents, eventsQuery, db } from "../../services/firebase";
 import qs from "qs";
+import EventCardActions from "../components/EventCardActions";
 
 const useStyles = makeStyles(theme => ({
   icon: {
@@ -46,22 +44,28 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function Eventos({
-  isAuth,
-  user,
-  location,
-  asistencias,
-  gustados,
-  addGustado,
-  addAsistencia
-}) {
+export default function Eventos({ isAuth, user, location }) {
   const query = qs.parse(location.search.slice(1));
 
   const classes = useStyles();
   const [events, setEvents] = React.useState([]);
 
   React.useEffect(() => {
-    getAllEvents({ categoria: query.categoria }).then(setEvents);
+    let q = db.collection("Eventos");
+
+    if (query.categoria) {
+      q = q.where("Categoria", "==", query.categoria);
+    }
+
+    q.get()
+      .then(r => r.docs)
+      .then(docs =>
+        docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }))
+      )
+      .then(docs => setEvents(docs));
   });
 
   return (
@@ -123,36 +127,10 @@ export default function Eventos({
                     </ul>
                   </CardContent>
                   <CardActions>
-                    {isAuth && user ? (
-                      <div>
-                        <IconButton
-                          aria-label="add to favorites"
-                          onClick={() => addGustado(evento.id)}
-                        >
-                          <FavoriteIcon
-                            color={
-                              gustados[`${evento.id}${user.Email}`]
-                                ? "error"
-                                : "action"
-                            }
-                          />
-                        </IconButton>
-                        <IconButton
-                          aria-label="save"
-                          onClick={() => addAsistencia(evento.id)}
-                        >
-                          <BookmarkIcon
-                            color={
-                              asistencias[`${evento.id}${user.Email}`]
-                                ? "error"
-                                : "action"
-                            }
-                          />
-                        </IconButton>
-                      </div>
-                    ) : (
-                      <div></div>
-                    )}
+                    <EventCardActions
+                      eventId={evento.id}
+                      user={user}
+                    ></EventCardActions>
                     <Button
                       size="small"
                       color="primary"

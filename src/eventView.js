@@ -10,12 +10,11 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Container from "@material-ui/core/Container";
 import IconButton from "@material-ui/core/IconButton";
-import FavoriteIcon from "@material-ui/icons/Favorite";
 import DeleteIcon from "@material-ui/icons/Delete";
-import BookmarkIcon from "@material-ui/icons/Bookmark";
 import { Redirect, useParams } from "react-router-dom";
 
 import { db } from "./services/firebase";
+import EventCardActions from "./modules/components/EventCardActions";
 
 const useStyles = makeStyles(theme => ({
   icon: {
@@ -49,15 +48,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function SignUp({
-  setAuthentication,
-  isAuth,
-  user,
-  asistencias,
-  gustados,
-  addGustado,
-  addAsistencia
-}) {
+function SignUp({ setAuthentication, isAuth, user }) {
   const classes = useStyles();
   const { idEvento } = useParams();
   const [evento, setEvento] = React.useState(null);
@@ -108,30 +99,10 @@ function SignUp({
               </CardContent>
               {isAuth && user ? (
                 <CardActions>
-                  <IconButton
-                    aria-label="add to favorites"
-                    onClick={() => addGustado(evento.id)}
-                  >
-                    <FavoriteIcon
-                      color={
-                        gustados[`${evento.id}${user.Email}`]
-                          ? "error"
-                          : "action"
-                      }
-                    />
-                  </IconButton>
-                  <IconButton
-                    aria-label="save"
-                    onClick={() => addAsistencia(evento.id)}
-                  >
-                    <BookmarkIcon
-                      color={
-                        asistencias[`${evento.id}${user.Email}`]
-                          ? "error"
-                          : "action"
-                      }
-                    />
-                  </IconButton>
+                  <EventCardActions
+                    eventId={evento.id}
+                    user={user}
+                  ></EventCardActions>
                   {evento.idUsuario == user.Email ? (
                     <IconButton aria-label="delete">
                       <DeleteIcon />
