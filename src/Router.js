@@ -30,7 +30,7 @@ export default function Router(props) {
     { path: "/perfil", component: Perfil },
     { path: "/crearEvento", component: crearEvento },
     { path: "/cargando", component: Cargando },
-    { path: "/eventoVista", component: eventoVista },
+    { path: "/evento/:idEvento", component: eventoVista },
   ];
 
   return routes.map(route => (

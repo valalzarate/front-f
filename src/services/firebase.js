@@ -140,6 +140,18 @@ export async function getAllGustados() {
     .then(getDocsDataFromQuery);
 }
 
+export async function getAllAsistencias() {
+  if (!auth.currentUser) {
+    return [];
+  }
+
+  return db
+    .collection("Asistencias")
+    .where("idUsuario", "==", auth.currentUser.email)
+    .get()
+    .then(getDocsDataFromQuery);
+}
+
 export async function likeEvent(idEvento, titulo) {
   const like = {
     idEvento,

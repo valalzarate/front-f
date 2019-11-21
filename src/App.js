@@ -15,7 +15,16 @@ function App() {
   return (
     <Provider>
       <Consumer>
-        {({ isAuth, setAuthentication, updateProfile, user }) => (
+        {({
+          isAuth,
+          setAuthentication,
+          updateProfile,
+          user,
+          asistencias,
+          gustados,
+          addGustado,
+          addAsistencia
+        }) => (
           <Router>
             <React.Fragment>
               <AppAppBar
@@ -30,6 +39,10 @@ function App() {
                   setAuthentication={setAuthentication}
                   user={user}
                   updateProfile={updateProfile}
+                  asistencias={asistencias}
+                  gustados={gustados}
+                  addGustado={addGustado}
+                  addAsistencia={addAsistencia}
                 />
               }
               <AppFooter />
