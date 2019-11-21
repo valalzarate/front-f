@@ -78,7 +78,7 @@ export const adduser = (
       Email: email,
       TipoUsuario: typeUser,
       photoURL: urlphoto,
-      likes: []
+      Likes: []
     });
 };
 
@@ -101,7 +101,8 @@ export const addpost = (
     Categoria: categoria,
     Fecha: fecha,
     photoEvent: imgLink,
-    likes: 0
+    likesCount: 0,
+    Likes: []
   });
 };
 

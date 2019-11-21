@@ -16,6 +16,8 @@ import { Redirect, useParams } from "react-router-dom";
 import { db } from "./services/firebase";
 import EventCardActions from "./modules/components/EventCardActions";
 
+var EventoID = "loading..";
+
 const useStyles = makeStyles(theme => ({
   icon: {
     marginRight: theme.spacing(2)
@@ -52,6 +54,7 @@ function SignUp({ setAuthentication, isAuth, user }) {
   const classes = useStyles();
   const { idEvento } = useParams();
   const [evento, setEvento] = React.useState(null);
+  const [existeEvento, setNoExisteEvento] = React.useState(null);
 
   React.useEffect(() => {
     db.collection("Eventos")
@@ -65,12 +68,31 @@ function SignUp({ setAuthentication, isAuth, user }) {
       );
   });
 
+  const eventoActual = db.collection("Eventos").doc(idEvento);
+  const LikesActual = db.collection("Likes").doc(EventoID);
+  const AsistenciasActual = db.collection("Asistencias").doc(EventoID);
+
+  async function deleteEvent() {
+    if (user) {
+      EventoID = idEvento;
+      LikesActual.delete();
+      AsistenciasActual.delete();
+      eventoActual.delete();
+      setNoExisteEvento(true);
+    }
+  }
+
+  let to = "/eventos";
+
   if (!idEvento) {
     return <Redirect to="/eventos"></Redirect>;
   }
 
   return evento ? (
     <div>
+
+      {existeEvento? <Redirect to={to}></Redirect> : <div></div>}
+
       <Container className={classes.cardGrid} maxWidth="md">
         {/* End hero unit */}
         <Grid container spacing={1}>
@@ -104,7 +126,10 @@ function SignUp({ setAuthentication, isAuth, user }) {
                     user={user}
                   ></EventCardActions>
                   {evento.idUsuario == user.Email ? (
-                    <IconButton aria-label="delete">
+                    <IconButton 
+                    aria-label="delete"
+                    onClick={() => (deleteEvent())}
+                    >
                       <DeleteIcon />
                     </IconButton>
                   ) : (
