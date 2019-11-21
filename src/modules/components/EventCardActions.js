@@ -112,7 +112,7 @@ function EventCardActions({ user, eventId }) {
            onClick={() => (asistencia ? desasistirEvento() : asistirEvento())}
           >
             <BookmarkIcon color={asistencia ? "secondary" : "action"} />
-            {numeroAsistentes}
+            
           </IconButton>
         </div>
       ) : (
