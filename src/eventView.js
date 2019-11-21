@@ -11,12 +11,14 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Container from "@material-ui/core/Container";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import { Redirect, useParams } from "react-router-dom";
 
 import { db } from "./services/firebase";
 import EventCardActions from "./modules/components/EventCardActions";
 
 var EventoID = "loading..";
+var numeroAsistentes;
 
 const useStyles = makeStyles(theme => ({
   icon: {
@@ -69,6 +71,9 @@ function SignUp({ setAuthentication, isAuth, user }) {
   });
 
   const eventoActual = db.collection("Eventos").doc(idEvento);
+
+  eventoActual.get().then(doc => { numeroAsistentes = parseInt(doc.get("asistentesCount")) }); 
+
   const LikesActual = db.collection("Likes").doc(EventoID);
   const AsistenciasActual = db.collection("Asistencias").doc(EventoID);
 
@@ -132,6 +137,18 @@ function SignUp({ setAuthentication, isAuth, user }) {
                     >
                       <DeleteIcon />
                     </IconButton>
+                  ) : (
+                    <div></div>
+                  )}
+                  {evento.idUsuario == user.Email ? (
+                    <IconButton 
+                    aria-label="asistentes"
+                    color = {"primary"}
+                    >
+                      <CheckCircleIcon />
+                      {numeroAsistentes}
+                    </IconButton>
+                    
                   ) : (
                     <div></div>
                   )}

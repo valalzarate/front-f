@@ -6,6 +6,7 @@ import BookmarkIcon from "@material-ui/icons/Bookmark";
 
 
 var numeroLikes;
+var numeroAsistentes;
 var nombreEvento = "loading.";
 
 function EventCardActions({ user, eventId }) {
@@ -29,7 +30,10 @@ function EventCardActions({ user, eventId }) {
 
    const eventoActual = db.collection("Eventos").doc(eventId);
 
-   eventoActual.get().then(doc => { numeroLikes = parseInt(doc.get("likesCount")) }); // aqui obtiene el número de likes actual del evento y lo asigna en numeroLikes
+   eventoActual.get().then(doc => { 
+    numeroLikes = parseInt(doc.get("likesCount")) 
+    numeroAsistentes = parseInt(doc.get("asistentesCount"))
+    }); // aqui obtiene el número de likes actual del evento y lo asigna en numeroLikes
 
    let admin = require('firebase'); // se requiere para incrementar el valor de likes en la db
 
@@ -45,6 +49,7 @@ function EventCardActions({ user, eventId }) {
   async function asistirEvento() {
     if (user) {
       await asistenciasQuery().set({ eventId });
+      sumarAsistencia();
       setAsistencia(true);
     }
   }
@@ -52,6 +57,9 @@ function EventCardActions({ user, eventId }) {
   async function desasistirEvento() {
     if (user) {
       await asistenciasQuery().delete();
+      await eventoActual.update({
+        asistentesCount: admin.firestore.FieldValue.increment(-1)
+        });
       setAsistencia(false);
     }
   }
@@ -74,12 +82,18 @@ function EventCardActions({ user, eventId }) {
     }
   }
 
+  async function sumarAsistencia() {
+    if (user) {
+      await eventoActual.update({
+      asistentesCount: admin.firestore.FieldValue.increment(1)
+      });
+    }
+  }
   
   React.useEffect(() => {
     if (user) {
-      likesQuery()
-        .get()
-        .then(d => setGusto(d.exists));
+      likesQuery().get().then(d => setGusto(d.exists));
+      asistenciasQuery().get().then(d => setAsistencia(d.exists));
     }
   });
 
@@ -98,6 +112,7 @@ function EventCardActions({ user, eventId }) {
            onClick={() => (asistencia ? desasistirEvento() : asistirEvento())}
           >
             <BookmarkIcon color={asistencia ? "secondary" : "action"} />
+            {numeroAsistentes}
           </IconButton>
         </div>
       ) : (
