@@ -70,13 +70,15 @@ function SignUp({ setAuthentication, isAuth, user }) {
         })
       );
 
-    db.collection("Asistencias")
-      .doc(idEvento)
-      .collection("Asistentes")
-      .get()
-      .then(asistentes => {
-        setAsistentes(asistentes.docs.map(doc => doc.id));
-      });
+    if (user && evento.idUsuario == user.Email) {
+      db.collection("Asistencias")
+        .doc(idEvento)
+        .collection("Asistentes")
+        .get()
+        .then(asistentes => {
+          setAsistentes(asistentes.docs.map(doc => doc.id));
+        });
+    }
   });
 
   const eventoActual = db.collection("Eventos").doc(idEvento);
