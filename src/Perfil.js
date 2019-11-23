@@ -211,6 +211,17 @@ function Perfil({ user, isAuth, updateProfile }) {
                 </form>
               )}
             </Form>
+
+            {
+              user ? <Button 
+              href={`/eventos?idUsuario=${user.Email}`}
+              variant="contained" 
+              color="primary" 
+              fullWidth
+            >
+              Ver mis eventos
+            </Button> : <></>
+            }
           </AppForm>
         </div>
       )}
