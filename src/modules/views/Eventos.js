@@ -57,6 +57,10 @@ export default function Eventos({ isAuth, user, location }) {
       q = q.where("Categoria", "==", query.categoria);
     }
 
+    if (query.idUsuario) {
+      q = q.where('idUsuario', '==', query.idUsuario)
+    }
+
     q.get()
       .then(r => r.docs)
       .then(docs =>
