@@ -112,11 +112,14 @@ function SignUp({ setAuthentication, isAuth, user }) {
         {/* End hero unit */}
         <Grid container spacing={1}>
           <Grid item xs={12}>
-            <Card className={classes.card}>
+            <Card className={classes.card} style={{
+                  height: 'auto'
+                }}>
               <CardMedia
                 className={classes.cardMedia}
                 image={evento.photoEvent}
                 title="Image title"
+
               />
               <CardContent className={classes.cardContent}>
                 <Typography gutterBottom variant="h4" component="h2">
@@ -140,7 +143,7 @@ function SignUp({ setAuthentication, isAuth, user }) {
                     eventId={evento.id}
                     user={user}
                   ></EventCardActions>
-                  {evento.idUsuario == user.Email ? (
+                  {user && evento.idUsuario == user.Email ? (
                     <IconButton
                       aria-label="delete"
                       onClick={() => deleteEvent()}
@@ -150,7 +153,7 @@ function SignUp({ setAuthentication, isAuth, user }) {
                   ) : (
                     <div></div>
                   )}
-                  {evento.idUsuario == user.Email ? (
+                  {user && evento.idUsuario == user.Email ? (
                     <IconButton aria-label="asistentes" color={"primary"}>
                       <CheckCircleIcon />
                       {numeroAsistentes}
@@ -163,17 +166,22 @@ function SignUp({ setAuthentication, isAuth, user }) {
                 <div></div>
               )}
             </Card>
-            <Card>
+
+            {
+              user && evento.idUsuario == user.Email ? (
+              <Card>
                 <CardContent>
                     <ul>
                         {
                             asistentes.map(asistente => (
-                                <li>{asistente}</li>
+                                <li key={asistente}>{asistente}</li>
                             ))
                         }
                     </ul>
                 </CardContent>
-            </Card>
+              </Card> ) : (<div></div>)
+              
+            }
           </Grid>
         </Grid>
       </Container>
