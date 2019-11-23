@@ -11,7 +11,7 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Container from "@material-ui/core/Container";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import { Redirect, useParams } from "react-router-dom";
 
 import { db } from "./services/firebase";
@@ -57,6 +57,7 @@ function SignUp({ setAuthentication, isAuth, user }) {
   const { idEvento } = useParams();
   const [evento, setEvento] = React.useState(null);
   const [existeEvento, setNoExisteEvento] = React.useState(null);
+  const [asistentes, setAsistentes] = React.useState([]);
 
   React.useEffect(() => {
     db.collection("Eventos")
@@ -68,11 +69,21 @@ function SignUp({ setAuthentication, isAuth, user }) {
           ...doc.data()
         })
       );
+
+    db.collection("Asistencias")
+      .doc(idEvento)
+      .collection("Asistentes")
+      .get()
+      .then(asistentes => {
+        setAsistentes(asistentes.docs.map(doc => doc.id));
+      });
   });
 
   const eventoActual = db.collection("Eventos").doc(idEvento);
 
-  eventoActual.get().then(doc => { numeroAsistentes = parseInt(doc.get("asistentesCount")) }); 
+  eventoActual.get().then(doc => {
+    numeroAsistentes = parseInt(doc.get("asistentesCount"));
+  });
 
   const LikesActual = db.collection("Likes").doc(EventoID);
   const AsistenciasActual = db.collection("Asistencias").doc(EventoID);
@@ -95,8 +106,7 @@ function SignUp({ setAuthentication, isAuth, user }) {
 
   return evento ? (
     <div>
-
-      {existeEvento? <Redirect to={to}></Redirect> : <div></div>}
+      {existeEvento ? <Redirect to={to}></Redirect> : <div></div>}
 
       <Container className={classes.cardGrid} maxWidth="md">
         {/* End hero unit */}
@@ -131,9 +141,9 @@ function SignUp({ setAuthentication, isAuth, user }) {
                     user={user}
                   ></EventCardActions>
                   {evento.idUsuario == user.Email ? (
-                    <IconButton 
-                    aria-label="delete"
-                    onClick={() => (deleteEvent())}
+                    <IconButton
+                      aria-label="delete"
+                      onClick={() => deleteEvent()}
                     >
                       <DeleteIcon />
                     </IconButton>
@@ -141,14 +151,10 @@ function SignUp({ setAuthentication, isAuth, user }) {
                     <div></div>
                   )}
                   {evento.idUsuario == user.Email ? (
-                    <IconButton 
-                    aria-label="asistentes"
-                    color = {"primary"}
-                    >
+                    <IconButton aria-label="asistentes" color={"primary"}>
                       <CheckCircleIcon />
                       {numeroAsistentes}
                     </IconButton>
-                    
                   ) : (
                     <div></div>
                   )}
@@ -156,6 +162,17 @@ function SignUp({ setAuthentication, isAuth, user }) {
               ) : (
                 <div></div>
               )}
+            </Card>
+            <Card>
+                <CardContent>
+                    <ul>
+                        {
+                            asistentes.map(asistente => (
+                                <li>{asistente}</li>
+                            ))
+                        }
+                    </ul>
+                </CardContent>
             </Card>
           </Grid>
         </Grid>
