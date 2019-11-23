@@ -70,7 +70,7 @@ export default function Eventos({ isAuth, user, location }) {
         }))
       )
       .then(docs => setEvents(docs));
-  });
+  }, []);
 
   return (
     <React.Fragment>
