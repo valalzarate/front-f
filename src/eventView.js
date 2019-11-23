@@ -70,7 +70,7 @@ function SignUp({ setAuthentication, isAuth, user }) {
         })
       );
 
-    if (user && evento.idUsuario == user.Email) {
+    if (user && evento && evento.idUsuario == user.Email) {
       db.collection("Asistencias")
         .doc(idEvento)
         .collection("Asistentes")

@@ -38,6 +38,7 @@ function SignUp({ setAuthentication, isAuth, user }) {
   const [sent, setSent] = React.useState(false);
   const [category, setCategory] = React.useState("Playeros");
   const [image, setImage] = React.useState(null);
+  const [eventCreated, setEventCreated] = React.useState(null)
 
   const validate = values => {
     const errors = required(
@@ -92,12 +93,20 @@ function SignUp({ setAuthentication, isAuth, user }) {
       
       newPost
         .get()
-        .then(r => r.data())
-        .then(console.log);
+        .then(r => 
+          setEventCreated({
+            id: r.id,
+            ...r.data()
+          })
+        )
     } catch (e) {
       setSent(false);
     }
   };
+
+  if (eventCreated) {
+    return <Redirect to={`/evento/${eventCreated.id}`}></Redirect>
+  }
 
   return (
     <div>
@@ -133,6 +142,7 @@ function SignUp({ setAuthentication, isAuth, user }) {
               noValidate
             >
               <Grid>
+                <label>Imagen del evento</label><br></br>
                 <input
                   accept="image/*"
                   className={classes.input}
@@ -140,26 +150,13 @@ function SignUp({ setAuthentication, isAuth, user }) {
                   multiple
                   type="file"
                   style={{
-                    display: "none"
+                    
                   }}
                   onChange={e => setImage(e.target.files[0])}
                 />
-                <label
-                  htmlFor="contained-button-file"
-                  style={{
-                    paddingTop: "10px"
-                  }}
-                >
-                  <Button
-                    id="upload-button"
-                    variant="contained"
-                    component="span"
-                    className={classes.button}
-                  >
-                    Cargar Imagen
-                  </Button>
-                </label>
               </Grid>
+
+              <br></br>
 
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={12}>

@@ -218,8 +218,25 @@ function Perfil({ user, isAuth, updateProfile }) {
               variant="contained" 
               color="primary" 
               fullWidth
+              style={{
+                marginTop: '30px'
+              }}
             >
               Ver mis eventos
+            </Button> : <></>
+            }
+
+            {
+              user ? <Button 
+              href="/asistencia"
+              variant="contained" 
+              color="primary" 
+              fullWidth
+              style={{
+                marginTop: '30px'
+              }}
+            >
+              Ver eventos a los que iré
             </Button> : <></>
             }
           </AppForm>

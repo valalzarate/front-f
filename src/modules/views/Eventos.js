@@ -131,10 +131,6 @@ export default function Eventos({ isAuth, user, location }) {
                     </ul>
                   </CardContent>
                   <CardActions>
-                    <EventCardActions
-                      eventId={evento.id}
-                      user={user}
-                    ></EventCardActions>
                     <Button
                       size="small"
                       color="primary"
