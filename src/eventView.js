@@ -79,7 +79,7 @@ function SignUp({ setAuthentication, isAuth, user }) {
           setAsistentes(asistentes.docs.map(doc => doc.id));
         });
     }
-  });
+  }, []);
 
   const eventoActual = db.collection("Eventos").doc(idEvento);
 
