@@ -44,33 +44,52 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function Eventos({ isAuth, user, location }) {
-  const query = qs.parse(location.search.slice(1));
+export default function Asistencia({ isAuth, user, location }) {
 
   const classes = useStyles();
   const [events, setEvents] = React.useState([]);
 
   React.useEffect(() => {
-    let q = db.collection("Eventos");
+    if (user && events.length == 0) {
+      db
+        .collection('Eventos')
+        .get()
+        .then(async eventos => {
+          
 
-    if (query.categoria) {
-      q = q.where("Categoria", "==", query.categoria);
+          let arr = []
+
+
+          for (let evento of eventos.docs) {
+            arr.push(
+              db.collection('Asistencias')
+                .doc(evento.id)
+                .collection('Asistentes')
+                .doc(user.Email)
+                .get()
+                .then((asistencia) => ({
+                  evento: {
+                    id: evento.id,
+                    ...evento.data()
+                  },
+                  exists: asistencia.exists
+                }))
+            )
+          }
+
+          Promise.all(arr).then(responses => {
+            let temp = []
+
+            for (let response of responses) {
+              if (response.exists) temp.push(response.evento)
+            }
+
+            setEvents(temp)
+          })
+          
+        })
     }
-
-    if (query.idUsuario) {
-      q = q.where('idUsuario', '==', query.idUsuario)
-    }
-
-    q.get()
-      .then(r => r.docs)
-      .then(docs =>
-        docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }))
-      )
-      .then(docs => setEvents(docs));
-  }, []);
+  }, [user]);
 
   return (
     <React.Fragment>
@@ -85,7 +104,7 @@ export default function Eventos({ isAuth, user, location }) {
               color="textPrimary"
               gutterBottom
             >
-              Eventos {query.categoria}
+              Eventos a los que iré
             </Typography>
             <Typography
               variant="h5"
@@ -93,7 +112,7 @@ export default function Eventos({ isAuth, user, location }) {
               color="textSecondary"
               paragraph
             >
-              Aquí podrás encontrar todos los eventos que tenemos para ti.
+              Aquí podrás encontrar todos los eventos en los que te has apuntado.
             </Typography>
             <div className={classes.heroButtons}></div>
           </Container>

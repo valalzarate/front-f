@@ -6,7 +6,7 @@ import Typography from '../components/Typography';
 import ProductHeroLayout from './ProductHeroLayout';
 
 const backgroundI =
-  'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80';
+  'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80';
 
  const styles = theme => ({
   background: {
@@ -36,7 +36,7 @@ function ProductHero(props) {
       {/* Increase the network loading priority of the background image. */}
       <img style={{ display: 'none' }} src={backgroundI} alt="increase priority" />
       <Typography color="inherit" align="center" variant="h2" marked="center">
-        Eventos Vacile solo para ti
+        ¡EL VACILE HA LLEGADO!
       </Typography>
       <Typography color="inherit" align="center" variant="h5" className={classes.h5}>
         Descubre los mejores eventos que hay en baranquilla, disfruta de las mejores actividades con nosotros.

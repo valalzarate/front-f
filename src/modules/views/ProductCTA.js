@@ -21,7 +21,7 @@ const styles = theme => ({
   card: {
     display: 'flex',
     justifyContent: 'center',
-    backgroundColor: theme.palette.warning.main,
+    backgroundColor: '#FF9500',
     padding: theme.spacing(8, 3),
   },
   cardContent: {
@@ -79,10 +79,10 @@ function ProductCTA(props) {
           <div className={classes.card}>
             <form onSubmit={handleSubmit} className={classes.cardContent}>
               <Typography variant="h2" component="h2" gutterBottom>
-                Recibe Noticicaciones
+                Recibe Notificaciones
               </Typography>
               <Typography variant="h5">
-                Lo mejor esestar al tanto de todo lo que pasa en barranquilla.
+                Lo mejor es estar al tanto de todo lo que pasa en barranquilla.
               </Typography>
               <TextField noBorder className={classes.textField} placeholder="Your email" />
               <Button type="submit" color="primary" variant="contained" className={classes.button}>

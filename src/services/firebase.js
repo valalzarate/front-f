@@ -16,7 +16,10 @@ firebase.initializeApp({
 });
 
 export const auth = firebase.auth();
+auth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
 export const db = firebase.firestore();
+
+export const eventsQuery = db.collection("Eventos");
 
 export const login = (email, password) => {
   return auth.signInWithEmailAndPassword(email, password);
@@ -30,6 +33,33 @@ export const signup = (email, password, firstName, lastName) => {
         displayName: `${firstName} ${lastName}`
       });
     });
+};
+
+export const getUser = () => {
+  return db
+    .collection("Usuarios")
+    .doc(auth.currentUser.email)
+    .get()
+    .then(r => r.data());
+};
+
+export const readUser = async email => {
+  try {
+    const data = await db
+      .collection("Usuarios")
+      .where("Email", "==", email)
+      .get();
+
+    let user = [];
+    data.forEach(doc => {
+      console.log(doc);
+      user.push(doc.data());
+    });
+
+    return user;
+  } catch (err) {
+    return console.log(err);
+  }
 };
 
 export const adduser = (
@@ -47,7 +77,8 @@ export const adduser = (
       Apellido: lastName,
       Email: email,
       TipoUsuario: typeUser,
-      photoURL: urlphoto
+      photoURL: urlphoto,
+      Likes: []
     });
 };
 
@@ -56,20 +87,23 @@ export const addpost = (
   autor,
   lugar,
   descripcion,
+  categoria,
   fecha,
   imgLink,
   idUsuario
 ) => {
-  db.collection("Eventos")
-    .doc(titulo)
-    .set({
-      Titulo: titulo,
-      Autores: autor,
-      Lugar: lugar,
-      Descripcion: descripcion,
-      Fecha: fecha,
-      photoEvent: imgLink
-    });
+  return db.collection("Eventos").add({
+    idUsuario,
+    Titulo: titulo,
+    Autores: autor,
+    Lugar: lugar,
+    Descripcion: descripcion,
+    Categoria: categoria,
+    Fecha: fecha,
+    photoEvent: imgLink,
+    likesCount: 0,
+    Likes: []
+  });
 };
 
 export const signout = () => {
@@ -79,3 +113,20 @@ export const signout = () => {
 export const passwordRecovery = email => {
   return auth.sendPasswordResetEmail(email);
 };
+
+export async function getDocsDataFromQuery(query) {
+  return query.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data()
+  }));
+}
+
+export async function getAllEvents({ categoria }) {
+  let q = eventsQuery;
+
+  if (categoria) {
+    q = eventsQuery.where("Categoria", "==", categoria);
+  }
+
+  return q.get().then(getDocsDataFromQuery);
+}

@@ -11,7 +11,7 @@ import RFTextField from "./modules/form/RFTextField";
 import FormButton from "./modules/form/FormButton";
 import FormFeedback from "./modules/form/FormFeedback";
 import { Redirect } from "react-router-dom";
-
+import qs from "qs";
 import { login } from "./services/firebase";
 
 const useStyles = makeStyles(theme => ({
@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function SignIn({ setAuthentication, isAuth }) {
+function SignIn({ setAuthentication, isAuth, location, match }) {
   const classes = useStyles();
   const [sent, setSent] = React.useState(false);
 
@@ -57,9 +57,20 @@ function SignIn({ setAuthentication, isAuth }) {
     }
   };
 
+  const query = qs.parse(location.search.slice(1));
+
+  let to = "/perfil";
+
+  switch (query.continue) {
+    case "/crearEvento": {
+      to = "/crearEvento";
+      break;
+    }
+  }
+
   return (
     <div>
-      {isAuth ? <Redirect to={"/perfil"}></Redirect> : <div></div>}
+      {isAuth ? <Redirect to={to}></Redirect> : <div></div>}
 
       <AppForm>
         <React.Fragment>

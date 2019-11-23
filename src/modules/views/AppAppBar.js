@@ -6,14 +6,15 @@ import Link from "@material-ui/core/Link";
 import AppBar from "../components/AppBar";
 import Toolbar, { styles as toolbarStyles } from "../components/Toolbar";
 
-import { auth } from "../../services/firebase";
-
 const styles = theme => ({
   title: {
     fontSize: 24
   },
   placeholder: toolbarStyles(theme).root,
   toolbar: {
+    background: "#c31432",
+    background: "-webkit-linear-gradient(to left, #673AB7, #c31432)",
+    background: "linear-gradient(to left, #673AB7, #c31432)",
     justifyContent: "space-between"
   },
   left: {
@@ -33,7 +34,7 @@ const styles = theme => ({
     marginLeft: theme.spacing(3)
   },
   linkSecondary: {
-    color: theme.palette.secondary.main
+    color: "#FFB300"
   }
 });
 
@@ -50,11 +51,24 @@ function AppAppBar({ classes, isAuth, setAuthentication, user }) {
             className={classes.title}
             href="/"
           >
-            {"¿Dónde está el vacile?"}
+            {"El Vacile"}
           </Link>
           <div className={classes.right}>
-            {isAuth ? (
+            {isAuth && user ? (
               <div>
+                {user.TipoUsuario == 1 ? (
+                  <Link
+                    color="inherit"
+                    variant="h6"
+                    underline="none"
+                    className={classes.rightLink}
+                    href="/crearEvento"
+                  >
+                    Crear evento
+                  </Link>
+                ) : (
+                  <div />
+                )}
                 <Link
                   color="inherit"
                   variant="h6"
@@ -62,7 +76,7 @@ function AppAppBar({ classes, isAuth, setAuthentication, user }) {
                   className={classes.rightLink}
                   href="/perfil"
                 >
-                  {`¡Hola, ${user && user.displayName}!`}
+                  {`¡Hola, ${user.Nombre}!`}
                 </Link>
                 <Link
                   color="inherit"

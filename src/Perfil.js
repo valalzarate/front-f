@@ -12,7 +12,7 @@ import FormButton from "./modules/form/FormButton";
 import FormFeedback from "./modules/form/FormFeedback";
 import Grid from "@material-ui/core/Grid";
 import firebase from "firebase";
-import { Redirect } from "react-router-dom";
+import { Redirect, useLocation } from "react-router-dom";
 
 export const auth = firebase.auth();
 export const db = firebase.firestore();
@@ -34,20 +34,41 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function Perfil({ user, isAuth, userDB }) {
+function Perfil({ user, isAuth, updateProfile }) {
   const classes = useStyles();
+  require("firebase/firestore");
 
+  const db = firebase.firestore();
   const [sent, setSent] = React.useState(false);
 
-  const handleSubmit = () => {
+  const handleSubmit = async ({ firstName, apellido }) => {
     setSent(true);
+
+    console.log({ user });
+
+    try {
+      await Promise.all([
+        auth.currentUser.updateProfile({
+          displayName: firstName + " " + apellido
+        }),
+        db
+          .collection("Usuarios")
+          .doc(user.Email)
+          .update({ Nombre: firstName, Apellido: apellido })
+      ]);
+
+      updateProfile();
+    } catch (error) {
+      setSent(false);
+    }
   };
 
   function uploadImage(event) {
-    const user = auth.currentUser;
     const file = event.target.files[0];
-    const storageRef = firebase.storage().ref(user.uid);
+    console.log("el archivo se llama: "+file);
+    const storageRef = firebase.storage().ref(`users/${user.Email}/profile`);
     const task = storageRef.put(file);
+    const userActual = db.collection("Usuarios").doc(user.Email);
 
     task.on(
       "state_changed",
@@ -56,30 +77,26 @@ function Perfil({ user, isAuth, userDB }) {
         console.log(error.message);
       },
       async () => {
-        const photoURL = await storageRef.getDownloadURL();
-        user.updateProfile({
-          photoURL
-        });
+        const photoURLNEW = await storageRef.getDownloadURL();
+
+        auth.currentUser.updateProfile({ photoURL: photoURLNEW }); //actualiza la foto en autentificacion
+        userActual.update({ photoURL: photoURLNEW }); //actualiza la foto en la database
+
+        updateProfile();
       }
     );
-
-    auth.currentUser.updateProfile({
-      photoURL: ""
-    });
   }
-
-  console.log(auth.currentUser);
 
   return (
     <div>
       {!isAuth ? (
-        <Redirect to="/login" />
+        <Redirect to="/login?continue=/perfil" />
       ) : (
         <div>
           <AppForm>
             <React.Fragment>
               <Typography variant="h3" gutterBottom align="center">
-                Perfil
+                Perfil de
                 <br />
               </Typography>
               <Typography
@@ -88,7 +105,7 @@ function Perfil({ user, isAuth, userDB }) {
                 marked="center"
                 align="center"
               >
-                {userDB && userDB.Nombre}
+                {user ? `${user.Nombre} ${user.Apellido}` : ""}
               </Typography>
             </React.Fragment>
 
@@ -99,15 +116,9 @@ function Perfil({ user, isAuth, userDB }) {
               direction="column"
               style={{}}
             >
-              <Avatar
-                alt="Remy Sharp"
-                src={user && user.photoURL ? user.photoURL : ""}
-              />
-
-              {console.log(isAuth)}
+              <Avatar src={user && user.photoURL ? user.photoURL : ""} />
 
               <Grid>
-                {" "}
                 <input
                   accept="image/*"
                   className={classes.input}
@@ -131,16 +142,16 @@ function Perfil({ user, isAuth, userDB }) {
                     component="span"
                     className={classes.button}
                   >
-                    Upload
+                    Actualizar Imagen
                   </Button>
                 </label>
               </Grid>
             </Grid>
 
             <Form onSubmit={handleSubmit} subscription={{ submitting: true }}>
-              {({ handleSubmit2, submitting }) => (
+              {({ handleSubmit, submitting }) => (
                 <form
-                  onSubmit={handleSubmit2}
+                  onSubmit={handleSubmit}
                   className={classes.form}
                   noValidate
                 >
@@ -150,6 +161,7 @@ function Perfil({ user, isAuth, userDB }) {
                         autoFocus
                         component={RFTextField}
                         autoComplete="fname"
+                        defaultValue={user ? user.Nombre : ""}
                         fullWidth
                         label="Nombre"
                         name="firstName"
@@ -159,6 +171,7 @@ function Perfil({ user, isAuth, userDB }) {
                       <Field
                         component={RFTextField}
                         autoComplete="lname"
+                        defaultValue={user ? user.Apellido : ""}
                         fullWidth
                         label="Apellido"
                         name="apellido"
@@ -170,6 +183,8 @@ function Perfil({ user, isAuth, userDB }) {
                     component={RFTextField}
                     disabled={submitting || sent}
                     fullWidth
+                    defaultValue={user ? user.Email : ""}
+                    disabled={true}
                     label="Correo"
                     margin="normal"
                     name="email"
@@ -189,11 +204,41 @@ function Perfil({ user, isAuth, userDB }) {
                     color="secondary"
                     fullWidth
                   >
-                    {submitting || sent ? "Actualizando…" : "Actualizar"}
+                    {submitting || sent
+                      ? "Actualizando…"
+                      : "Actualizar Información"}
                   </FormButton>
                 </form>
               )}
             </Form>
+
+            {
+              user ? <Button 
+              href={`/eventos?idUsuario=${user.Email}`}
+              variant="contained" 
+              color="primary" 
+              fullWidth
+              style={{
+                marginTop: '30px'
+              }}
+            >
+              Ver mis eventos
+            </Button> : <></>
+            }
+
+            {
+              user ? <Button 
+              href="/asistencia"
+              variant="contained" 
+              color="primary" 
+              fullWidth
+              style={{
+                marginTop: '30px'
+              }}
+            >
+              Ver eventos a los que iré
+            </Button> : <></>
+            }
           </AppForm>
         </div>
       )}

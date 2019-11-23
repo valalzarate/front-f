@@ -5,41 +5,38 @@ import { signout, auth, db } from "./services/firebase";
 const AuthContext = React.createContext();
 const Consumer = AuthContext.Consumer;
 
-const Provider = props => {
-  const [isAuth, setIsAuth] = useState(!!auth.currentUser);
-  const [user, setUser] = useState(auth.currentUser);
-  const [userDB, userDBLoaded] = React.useState(null);
+const getUser = email =>
+  db
+    .collection("Usuarios")
+    .doc(email)
+    .get()
+    .then(d => d.data());
 
-  const setAuthentication = async val => {
+const Provider = props => {
+  const [isAuth, setIsAuth] = useState(false);
+  const [user, setUser] = useState(null);
+
+  async function setAuthentication(val) {
     if (!val) {
       sessionStorage.clear();
       await signout();
-
-      console.log("BAH");
     }
 
     setIsAuth(val);
-  };
+  }
 
-  const getUserDB = async email => {
-    const user = await db
-      .collection("Usuarios")
-      .doc(email)
-      .get();
-    userDBLoaded(user);
-  };
+  async function updateProfile() {
+    setUser(await getUser(auth.currentUser.email));
+  }
 
   useEffect(() => {
-    auth.onAuthStateChanged(currentUser => {
-      console.log(currentUser);
-
+    auth.onAuthStateChanged(async currentUser => {
       if (currentUser) {
         setIsAuth(true);
-        setUser(currentUser);
-        getUserDB(currentUser.email);
+        setUser(await getUser(currentUser.email));
       } else {
         setIsAuth(false);
-        setUser(currentUser);
+        setUser(null);
       }
     });
   });
@@ -47,10 +44,10 @@ const Provider = props => {
   return (
     <AuthContext.Provider
       value={{
-        isAuth: isAuth,
-        setAuthentication: setAuthentication,
-        user: user,
-        userDB: userDB
+        isAuth,
+        setAuthentication,
+        user,
+        updateProfile
       }}
     >
       {props.children}
