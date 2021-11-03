@@ -19,7 +19,7 @@
     "react-standalone-form": "^0.6.10",
     "react-widgets": "^4.4.11",
     "theme-provider": "^1.0.8",
-    "validator": "^11.1.0"
+    "validator": "^13.7.0"
   },
   "scripts": {
     "start": "react-scripts start",
